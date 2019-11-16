@@ -11,6 +11,7 @@ public class UserDTO {
     private String zipCode;
     private String phoneNumber;
     private String role;
+    private String email;
 
     public String getUsername() {
 		return username;
@@ -91,4 +92,13 @@ public class UserDTO {
     public void setRole(String role) {
         this.role = role;
     }
+
+    public String getEmail() {
+        return email;
+    }
+
+    public void setEmail(String email) {
+        this.email = email;
+    }
 }
+

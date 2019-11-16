@@ -4,11 +4,12 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
 
+import java.io.Serializable;
 
 
 @Document(collection = "user")
-public class User {
-
+public class User implements Serializable {
+    private static final long serialVersionUID = 7156526077883281623L;
 	@Id
 	public String id;
 	private String username;
@@ -21,6 +22,7 @@ public class User {
 	private String zipCode;
 	private String phoneNumber;
 	private String role;
+	private String email;
 
 	public String getUsername() {
 		return username;
@@ -101,4 +103,11 @@ public class User {
 		this.role = role;
 	}
 
+	public String getEmail() {
+		return email;
+	}
+
+	public void setEmail(String email) {
+		this.email = email;
+	}
 }
