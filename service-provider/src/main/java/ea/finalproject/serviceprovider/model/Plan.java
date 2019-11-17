@@ -14,15 +14,14 @@ public class Plan {
     private double price;
     private String time;
     private String category;
+
     private ServiceProvider provider;
 
-    public Plan(String id, String planCode, String planName, double price, String time, String category, ServiceProvider provider) {
-        this.id = id;
+    public Plan(String planCode, String planName, double price, String time, String category) {
         this.planCode = planCode;
         this.planName = planName;
         this.price = price;
         this.time = time;
         this.category = category;
-        this.provider = provider;
     }
 }

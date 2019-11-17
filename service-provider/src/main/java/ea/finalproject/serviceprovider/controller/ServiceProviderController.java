@@ -1,24 +1,30 @@
 package ea.finalproject.serviceprovider.controller;
 
-import ea.finalproject.serviceprovider.model.Plans;
+
+import com.fasterxml.jackson.core.JsonProcessingException;
 import ea.finalproject.serviceprovider.model.ServiceProvider;
+import ea.finalproject.serviceprovider.model.ServiceProviders;
 import ea.finalproject.serviceprovider.repository.PlansRepository;
 import ea.finalproject.serviceprovider.repository.ServiceProviderRepo;
 import ea.finalproject.serviceprovider.model.Plan;
-import io.jsonwebtoken.Claims;
-import io.jsonwebtoken.Jws;
-import io.jsonwebtoken.Jwts;
+import ea.finalproject.serviceprovider.service.serviceimpl.TokenDecoder;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.web.bind.annotation.*;
 
+import java.io.UnsupportedEncodingException;
 import java.security.SignatureException;
+import java.util.HashMap;
 import java.util.List;
-import java.util.Optional;
+import java.util.logging.Logger;
+
 
 @RestController
 @RequestMapping("/provider")
 public class ServiceProviderController {
+
+    @Autowired
+    private TokenDecoder tokenDecoder;
 
     @Value("{SECRET_KEY:#{null}}")
     private String SECRET_KEY;
@@ -29,59 +35,65 @@ public class ServiceProviderController {
     @Autowired
     private PlansRepository plansRepository;
 
+    //private static final Logger log = LoggerFactory.getLogger(ServiceProviderController.class);
+    //private static final Logger log = Logger.getLogger("service-provider");
+
     @GetMapping("/list")
-    public List<ServiceProvider> listProvider(){
+    public List<ServiceProvider> listProvider() {
+
         return serviceProviderRepo.findAll();
     }
 
-    @GetMapping("/{id}")
-    public Optional getProvider(@RequestParam String id){
-        return serviceProviderRepo.findById(id);
+    @GetMapping("/{codeName}")
+    public ServiceProvider getProvider(@RequestHeader(name = "Authorization") String token, @PathVariable String codeName) throws UnsupportedEncodingException, JsonProcessingException {
+        HashMap<String, String> data = tokenDecoder.decode(token);
+        if (data.get("role").equals("ROLE_USER")) {
+            //log.info("retrieving service providers");
+            return serviceProviderRepo.getServiceProviderByProviderCode(codeName);
+        }
+        return null;
     }
 
     @GetMapping("/list/{country}")
-    public List<ServiceProvider> getProvidersByCountry(@RequestParam String country){
+    public List<ServiceProvider> getProvidersByCountry(@PathVariable String country) {
+        //log.info("retrieving service providers by countries");
         return serviceProviderRepo.getServiceProviderByProviderCountry(country);
     }
 
-    @GetMapping("/{provider}/plans")
-    public List<Plan> getPlans(@RequestHeader String token, @RequestParam String provider) throws SignatureException {
-        Jws<Claims> jwt = Jwts.parser()
-                .setSigningKey(SECRET_KEY)
-                .parseClaimsJws(token);
-        List<Plan> providerPlans = plansRepository.getPlansByProviderProviderId(provider);
+    @GetMapping("/{providerCode}/plans")
+    public List<Plan> getPlans(@PathVariable String providerCode) throws SignatureException {
+        List<Plan> providerPlans = plansRepository.getPlansByProviderProviderId(providerCode);
         return providerPlans;
     }
 
-    @PostMapping("/plans/add")
-    public String addPlans(){
-        Plans plans = new Plans();
-        try{
-            plansRepository.saveAll(plans.getPlans());
-        }
-        catch(Exception e){
+    @PostMapping("/save/all")
+    public String addPlans() {
+        serviceProviderRepo.deleteAll();
+        ServiceProviders providers = new ServiceProviders();
+        try {
+            serviceProviderRepo.saveAll(providers.getServiceProviders());
+        } catch (Exception e) {
             System.out.println(e.getMessage());
-            return "Failed to save plans";
+            return "Failed to save providers";
         }
-        return "Plans added";
+        return "Providers saved successfully";
     }
 
+
     @PostMapping("/save")
-    public String addProvider(@RequestBody ServiceProvider provider){
-        try{
+    public String addProvider(@RequestBody ServiceProvider provider) {
+        try {
             serviceProviderRepo.save(provider);
-        }
-        catch(Exception e){
+        } catch (Exception e) {
             System.out.println(e.getMessage());
             return "Failed to add";
         }
         return "Provider added";
     }
 
-    @DeleteMapping("/deleted")
-    public String delete(ServiceProvider provider){
-        serviceProviderRepo.delete(provider);
+    @DeleteMapping("/delete/{codeName}")
+    public String delete(@PathVariable String codeName) {
+        serviceProviderRepo.deleteServiceProviderByProviderCode(codeName);
         return "Provider deleted";
     }
-
 }

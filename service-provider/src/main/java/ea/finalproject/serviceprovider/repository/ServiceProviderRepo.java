@@ -9,5 +9,10 @@ import java.util.List;
 @Repository
 public interface ServiceProviderRepo extends MongoRepository<ServiceProvider, String> {
     public List<ServiceProvider> getServiceProviderByProviderCountry(String country);
+
     public ServiceProvider getServiceProviderByProviderId(String id);
+
+    public ServiceProvider getServiceProviderByProviderCode(String codeName);
+
+    public void deleteServiceProviderByProviderCode(String id);
 }

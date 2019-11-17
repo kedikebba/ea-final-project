@@ -9,5 +9,5 @@ import java.util.List;
 
 @Repository
 public interface PlansRepository extends MongoRepository<Plan, String> {
-    public List<Plan> getPlansByProviderProviderId(String id);
+    public List<Plan> getPlansByProviderProviderId(String providerCode);
 }
