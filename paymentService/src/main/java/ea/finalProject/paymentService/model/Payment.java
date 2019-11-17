@@ -3,7 +3,8 @@ package ea.finalProject.paymentService.model;
 import org.springframework.data.annotation.Id;
 import org.springframework.stereotype.Component;
 
-@Component
+import java.time.LocalDate;
+
 public class Payment {
 
     @Id
@@ -15,13 +16,13 @@ public class Payment {
     private String serviceProvider;
     private Double amount;
     private PaymentType paymentType;
-    private String subscriptionDate;
-    private String expiryDate;
+    private LocalDate subscriptionDate;
+    private LocalDate expiryDate;
 
     public Payment() {
     }
 
-    public Payment(String firstName, String lastName, String email, String plan, String serviceProvider, Double amount, PaymentType paymentType, String subscriptionDate, String expiryDate) {
+    public Payment(String firstName, String lastName, String email, String plan, String serviceProvider, Double amount, PaymentType paymentType, LocalDate subscriptionDate, LocalDate expiryDate) {
 
         this.firstName = firstName;
         this.lastName = lastName;
@@ -98,19 +99,19 @@ public class Payment {
         this.paymentType = paymentType;
     }
 
-    public String getSubscriptionDate() {
+    public LocalDate getSubscriptionDate() {
         return subscriptionDate;
     }
 
-    public void setSubscriptionDate(String subscriptionDate) {
+    public void setSubscriptionDate(LocalDate subscriptionDate) {
         this.subscriptionDate = subscriptionDate;
     }
 
-    public String getExpiryDate() {
+    public LocalDate getExpiryDate() {
         return expiryDate;
     }
 
-    public void setExpiryDate(String expiryDate) {
+    public void setExpiryDate(LocalDate expiryDate) {
         this.expiryDate = expiryDate;
     }
 }

@@ -2,19 +2,27 @@ package ea.finalProject.paymentService.controllers;
 
 
 import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.netflix.hystrix.contrib.javanica.annotation.HystrixCommand;
 import ea.finalProject.paymentService.model.Payment;
+import ea.finalProject.paymentService.model.PaymentType;
+import ea.finalProject.paymentService.model.PaymentTypeBuilder;
 import ea.finalProject.paymentService.repository.PaymentRepository;
+import ea.finalProject.paymentService.repository.PaymentTypeRepo;
 import ea.finalProject.paymentService.service.PaymentService;
 import ea.finalProject.paymentService.service.Producer;
+import ea.finalProject.paymentService.service.implementation.PaymentServiceImp;
 import ea.finalProject.paymentService.service.implementation.TokenDecoderServiceImp;
 
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.client.RestTemplate;
 
 import java.io.UnsupportedEncodingException;
-import java.util.HashMap;
+import java.util.*;
 
 
 @RestController
@@ -25,10 +33,16 @@ public class PaymentsController {
     private RestTemplate restTemplate;
 
     @Autowired
-    private PaymentService paymentService;
+    private PaymentTypeRepo paymentTypeRepo;
 
     @Autowired
-    private Payment payment;
+    private PaymentService paymentService;
+
+//    @Autowired
+//    private Payment payment;
+//
+//    @Autowired
+//    private PaymentTy payment;
 
     @Autowired
     private PaymentRepository paymentRepository;
@@ -45,25 +59,30 @@ public class PaymentsController {
     }
 
 
-
-
     @GetMapping("/all")
-    public String getAll(){
-        return paymentRepository.findAll().toString();
+    public List<Payment> getAll(){
+        return paymentRepository.findAll();
     }
     @GetMapping("/test")
     public void test(){
-        payment = paymentRepository.getFirstByAmountEquals(1000.0);
+        Payment payment = paymentRepository.getFirstByAmountEquals(1000.0);
         System.out.print(payment.toString());
         this.producer.sendMessage(payment);
     }
 
-    @GetMapping("/pay")
-    public String pay( @RequestHeader (name="Authorization") String token ) throws UnsupportedEncodingException, JsonProcessingException, JsonProcessingException {
+    @PostMapping("/pay")
+    public String pay( @RequestHeader (name="Authorization") String token,
+                       @RequestBody String json ) throws UnsupportedEncodingException, JsonProcessingException, JsonProcessingException, JSONException {
+
         HashMap<String, String> dataHash= tokenDecoderServiceImp.decode(token);
+
         if(dataHash.get("role").equals("ROLE_USER")) {
 
-            return "Authorized";
+          PaymentType paymentType =  paymentService.paymentType(json);
+          Payment payment = paymentService.payment(json, paymentType);
+            paymentTypeRepo.save(paymentType);
+            paymentRepository.save(payment);
+            return "Payment Type:" + paymentType.toString() +"\n\n\n\n" +"Payment: "+ payment.toString();
         }
         return "Unauthorised";
     }
@@ -79,5 +98,8 @@ public class PaymentsController {
     public String reliable() {
         return "Sorry, Request Could not be processed!";
     }
+
+
+
 
 }

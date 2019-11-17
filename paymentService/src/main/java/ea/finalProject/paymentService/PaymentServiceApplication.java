@@ -31,7 +31,6 @@ public class PaymentServiceApplication implements CommandLineRunner {
 
 	@Override
 	public void run(String... args) throws Exception {
-		PaymentType pt = new PaymentTypeBuilder().setAccountNumber("1234567891011").setBankName("MIDWEST FUCKERS").buildPaymentType();
-		System.out.print(pt);
+
 	}
 }

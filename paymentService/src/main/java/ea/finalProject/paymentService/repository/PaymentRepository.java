@@ -10,6 +10,7 @@ public interface PaymentRepository extends MongoRepository<Payment, String> {
 
     public Payment findPaymentByAmountEquals(Double value);
     public Payment getFirstByAmountEquals(Double value);
+
 //    public  List<Payment> findAllByPaymentType(String paymentType);
 
 
