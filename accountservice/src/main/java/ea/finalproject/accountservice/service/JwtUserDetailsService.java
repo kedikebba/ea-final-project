@@ -31,7 +31,7 @@ public class JwtUserDetailsService implements UserDetailsService {
 	}
 	
 	public User save(UserDTO user) {
-		if(userRepository.findByUsername(user.getUsername())==null) {
+	//	if(userRepository.findByUsername(user.getUsername())==null) {
 			User newUser = new User();
 			newUser.setUsername(user.getUsername());
 			newUser.setPassword(bcryptEncoder.encode(user.getPassword()));
@@ -45,10 +45,10 @@ public class JwtUserDetailsService implements UserDetailsService {
 			newUser.setRole("USER_ROLE");
 			newUser.setEmail(user.getEmail());
 			return userRepository.save(newUser);
-		}
-		else{
-			throw new UsernameNotFoundException("User with " + user.getUsername() + " already registered");
-		}
+//		}
+//		else{
+//			throw new UsernameNotFoundException("User with " + user.getUsername() + " already registered");
+//		}
 	}
 	public User getUser(String username){
 		return userRepository.findByUsername(username);

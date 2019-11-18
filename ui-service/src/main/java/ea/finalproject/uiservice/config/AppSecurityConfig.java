@@ -25,45 +25,6 @@ import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
 @EnableGlobalMethodSecurity(securedEnabled = true, proxyTargetClass = true)
 @EnableWebSecurity
 public class AppSecurityConfig extends WebSecurityConfigurerAdapter {
-//
-//    @Autowired
-//    private UserService userService;
-//    @Autowired
-//    private JwtRequestFilter filter;
-////    @Autowired
-////    private UserFilter userFilter;
-//
-//    @Override
-//    protected void configure(AuthenticationManagerBuilder auth) throws Exception {
-//        auth.userDetailsService(userService);
-//    }
-//
-////    @Bean
-////    public FilterRegistrationBean filterRegistrationBean(){
-////        FilterRegistrationBean filterRegistrationBean = new FilterRegistrationBean();
-////        filterRegistrationBean.setFilter(userFilter);
-////        filterRegistrationBean.addUrlPatterns("/url/*");
-////        filterRegistrationBean.setOrder(1);
-////        return filterRegistrationBean;
-////    }
-//
-//   @Bean
-//   public PasswordEncoder passwordEncoder(){
-//       return NoOpPasswordEncoder.getInstance();
-//   }
-//
-@Bean
-@Override
-public UserDetailsService userDetailsService() {
-    UserDetails user =
-            User.withDefaultPasswordEncoder()
-                    .username("user")
-                    .password("password")
-                    .roles("USER")
-                    .build();
-
-    return new InMemoryUserDetailsManager(user);
-}
 
     @Bean
     public AuthenticationManager authenticationManager() throws Exception {
@@ -73,15 +34,15 @@ public UserDetailsService userDetailsService() {
     @Override
     protected void configure(HttpSecurity http) throws Exception {
         http.csrf().disable()
-                .authorizeRequests().antMatchers("/login","/","/index").permitAll()
+                .authorizeRequests().antMatchers("/login","/","/index","/signup").permitAll()
                 .anyRequest().authenticated()
                 .and()
-                .formLogin()
-                .loginPage("/login")
-                .defaultSuccessUrl("/index")
-                .failureUrl("/login?error")
-                .permitAll()
-                .and()
+//                .formLogin()
+//                .loginPage("/login")
+//                .defaultSuccessUrl("/index")
+//                .failureUrl("/login?error")
+//                .permitAll()
+ //               .and()
                 .logout()
                 .logoutRequestMatcher(new AntPathRequestMatcher("/logout"))
                 .logoutSuccessUrl("/login?logout")
