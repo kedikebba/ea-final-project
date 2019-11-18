@@ -80,12 +80,12 @@ public UserDetailsService userDetailsService() {
                 .loginPage("/login")
                 .defaultSuccessUrl("/index")
                 .failureUrl("/login?error")
-                .permitAll()
+//                .permitAll()
                 .and()
                 .logout()
                 .logoutRequestMatcher(new AntPathRequestMatcher("/logout"))
                 .logoutSuccessUrl("/login?logout")
-                .permitAll()
+//                .permitAll()
                 .and().sessionManagement()
                 .sessionCreationPolicy(SessionCreationPolicy.STATELESS);
         //http.addFilterBefore(filter, UsernamePasswordAuthenticationFilter.class);
