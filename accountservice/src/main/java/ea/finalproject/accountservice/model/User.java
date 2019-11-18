@@ -1,6 +1,8 @@
 package ea.finalproject.accountservice.model;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonProperty;
+import lombok.ToString;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
 
@@ -13,6 +15,8 @@ public class User implements Serializable {
 	@Id
 	public String id;
 	private String username;
+	@JsonIgnore
+	@JsonProperty(value = "password")
 	private String password;
 	private String firstName;
 	private String lastName;

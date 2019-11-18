@@ -1,8 +1,11 @@
 package ea.finalproject.accountservice.config;
 
+import ea.finalproject.accountservice.repository.UserRepository;
+import ea.finalproject.accountservice.service.JwtUserDetailsService;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Component;
@@ -22,7 +25,8 @@ public class JwtTokenUtil implements Serializable {
 
 	@Value("${JWT_SECRET:#{null}")
 	private String secret;
-
+	@Autowired
+	private JwtUserDetailsService userDetailsService;
 	//retrieve username from jwt token
 	public String getUsernameFromToken(String token) {
 		return getClaimFromToken(token, Claims::getSubject);
@@ -52,6 +56,7 @@ public class JwtTokenUtil implements Serializable {
 	public String generateToken(UserDetails userDetails) {
 		Map<String, Object> claims = new HashMap<>();
 		claims.put("role", "ROLE_USER");
+		claims.put("email", userDetailsService.findByUsername(userDetails.getUsername()).getEmail());
 		return doGenerateToken(claims, userDetails.getUsername());
 	}
 

@@ -43,6 +43,7 @@ public class JwtUserDetailsService implements UserDetailsService {
 			newUser.setZipCode(user.getZipCode());
 			newUser.setPhoneNumber(user.getPhoneNumber());
 			newUser.setRole("USER_ROLE");
+			newUser.setEmail(user.getEmail());
 			return userRepository.save(newUser);
 		}
 		else{
@@ -50,6 +51,13 @@ public class JwtUserDetailsService implements UserDetailsService {
 		}
 	}
 	public User getUser(String username){
+		return userRepository.findByUsername(username);
+	}
+
+	public void deleteUser(String id){
+		 userRepository.deleteById(id);
+	}
+	public User findByUsername(String username){
 		return userRepository.findByUsername(username);
 	}
 }
