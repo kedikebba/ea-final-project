@@ -55,12 +55,12 @@ spec:
               valueFrom:
                 secretKeyRef:
                   name: payment-service-secrets
-                  key: secret-key-enc
+                  key: secretEcyptionKey
             - name: DB_NAME
               valueFrom:
                 secretKeyRef:
                   name: payment-service-config
-                  key: database-name
+                  key: databaseName
             - name: GROUP_ID
               valueFrom:
                 secretKeyRef:
