@@ -71,4 +71,10 @@ spec:
                 configMapKeyRef:
                   name: payment-service-config
                   key: kafka
+            - name: MONGO_HOST
+              valueFrom:
+                configMapKeyRef:
+                  name: payment-service-config
+                  key: mongoHost
+
             #MYSQL
