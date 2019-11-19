@@ -52,8 +52,47 @@ public class PaymentsController {
 
 
     @PostMapping("/pay")
-    @HystrixCommand(commandKey = "command-settings",fallbackMethod = "fallBackMethod")
+    @HystrixCommand(fallbackMethod = "fallBackMethod", commandProperties = {
+            @HystrixProperty(name = "execution.isolation.thread.timeoutInMilliseconds", value = "3000"),
+            @HystrixProperty(name = "circuitBreaker.errorThresholdPercentage", value="60")})
     public String pay(@RequestHeader(name = "Authorization") String token,
+                      @RequestBody String json) throws UnsupportedEncodingException, JsonProcessingException, JSONException {
+
+        HashMap<String, String> dataHash = tokenDecoderServiceImp.decode(token);
+        if (dataHash.get("role").equals("ROLE_USER")) {
+            PaymentType paymentType = paymentService.paymentType(json);
+
+            HashMap<String, String> paymentOptions = paymentService.paymentOptions(json);
+
+            String paymentOption = paymentOptions.get("paymentType");
+
+            String paymentEndpoint = paymentOptions.get(paymentOption);
+
+//          System.out.println("\n\n\n\n\n\n\n"+String.format("http://%s/bank",bankService)+"\n\n\n\n\n\n");
+
+            System.out.println("\n\n\n\n\n\n"+String.format("http://%s/"+paymentOption,paymentEndpoint)+"\n\n\n\n\n\n");
+
+            final String result = restTemplate.getForObject(String.format("http://%s/"+paymentOption,paymentEndpoint), String.class);
+            System.out.println("\n\n\n\n\n\n"+result+"\n\n\n\n\n\n");
+//            final String result = restTemplate.getForObject(String.format("http://%s/bank",bankService), String.class);
+
+            String paymentTypeEncrypted = paymentService.encrypt(paymentType.toString());
+
+            PaymentDetails paymentDetails = paymentService.payment(result, json, paymentTypeEncrypted);
+
+            paymentRepository.save(paymentDetails);
+
+            if (paymentDetails.getStatus().equals("OK")) {
+                PaymentWrapper paymentWrapper = paymentService.paymentWrapper(json);
+
+                this.producer.sendMessage(paymentWrapper);
+            }
+            return "Payment Type:" + paymentType.toString() + "\n\n\n\n" + "Payment: " + paymentDetails.toString() + "Payment Encrypted:";
+        }
+        return "Unauthorised";
+    }
+    @PostMapping("/payAll")
+    public String payAll(@RequestHeader(name = "Authorization") String token,
                       @RequestBody String json) throws UnsupportedEncodingException, JsonProcessingException, JSONException {
 
         HashMap<String, String> dataHash = tokenDecoderServiceImp.decode(token);
