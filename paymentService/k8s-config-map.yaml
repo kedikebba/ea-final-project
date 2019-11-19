@@ -13,3 +13,4 @@ data:
   databaseName: paymentsdb
   group_id: group_id
   kafka: kafka.default.svc.cluster.local
+  secretEcyptionKey: RW50ZXJwcmlzZUFyY2hpdGVjdHVyZUNTNTI0QFZFUklMTEhBTEw=

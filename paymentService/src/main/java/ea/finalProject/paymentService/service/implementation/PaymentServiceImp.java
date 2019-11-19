@@ -127,7 +127,7 @@ public class PaymentServiceImp implements PaymentService {
     private static SecretKeySpec secretKey;
     private static byte[] key;
 
-    @Value("${ENC_SECRET:#{null}}")
+    @Value("${ENC_SECRET}")
     private static String secret;
 
     public void setKey(String myKey)
