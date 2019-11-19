@@ -4,11 +4,9 @@ containerID := $(shell docker ps -a -q --filter ancestor=kedikebba/bankservice:l
 
 #===================  gradle  ===========================
 clean:
-	./gradlew clean
+	./mvnw clean
 build: clean
-	./gradlew  bootJar
-run-local: build
-	java -jar build/libs/ServiceA-*.jar
+	./mvnw install
 
 #===================  docker  ===========================
 docker-build: build
