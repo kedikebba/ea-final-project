@@ -12,5 +12,5 @@ data:
   bankService: bankservice.default.svc.cluster.local:8080
   databaseName: paymentdb
   group_id: group_id
-  kafka: kafka-server.default.svc.cluster.local
+  kafka: kafka-server.default.svc.cluster.local:9092
   mongoHost: mongodb+srv://admin:admin@eafinalproject-zxqvx.gcp.mongodb.net/test?retryWrites=true&w=majority

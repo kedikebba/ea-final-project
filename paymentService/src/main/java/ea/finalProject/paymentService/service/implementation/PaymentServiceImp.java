@@ -184,15 +184,16 @@ public class PaymentServiceImp implements PaymentService {
         ObjectMapper mapper = new ObjectMapper();
         HashMap<String, String> retMap = mapper.readValue(json, HashMap.class);
 
-        paymentWrapper.setFirstName(retMap.get("firstName"));
-        paymentWrapper.setLastName(retMap.get("lastName"));
+        paymentWrapper.setFirstName(retMap.get("name"));
+        paymentWrapper.setLastName(retMap.get("name"));
         paymentWrapper.setEmail(retMap.get("email"));
         paymentWrapper.setPlan(retMap.get("plan"));
         paymentWrapper.setServiceProvider(retMap.get("serviceProvider"));
         paymentWrapper.setAmount(Double.valueOf(retMap.get("amount")));
         paymentWrapper.setPaymentType(retMap.get("paymentType"));
         paymentWrapper.setSubscriptionDate(LocalDate.now().toString());
-        paymentWrapper.setExpiryDate(LocalDate.now().plusDays(30).toString());
+
+        paymentWrapper.setExpiryDate(LocalDate.now().plusDays(1).toString());
         return paymentWrapper;
     }
 
