@@ -1,17 +1,16 @@
 kind: ConfigMap
 apiVersion: v1
 metadata:
-  name: payment-service-config
+  name: paymentService-config
 data:
   someKey1: value1
   #reference: https://cloud.spring.io/spring-cloud-static/spring-cloud-kubernetes/1.1.0.RC1/reference/html/#kubernetes-native-service-discovery
 
-  nextService: payment-service.default.svc.cluster.local:8080
+  nextService: paymentService.default.svc.cluster.local:8080
   creditCardService: creditcard-service.default.svc.cluster.local:8080
   paypalService: paypal-service.default.svc.cluster.local:8080
-  bankService: bank-service.default.svc.cluster.local:8080
+  bankService: bankService.default.svc.cluster.local:8080
   databaseName: paymentsdb
   group_id: group_id
   kafka: kafka-server.default.svc.cluster.local
   mongoHost: paymentsdb-mongodb.default.svc.cluster.local
-#  secretEcyptionKey: RW50ZXJwcmlzZUFyY2hpdGVjdHVyZUNTNTI0QFZFUklMTEhBTEw=

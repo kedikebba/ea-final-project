@@ -1,80 +1,82 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: payment-service-deployment
+  name: paymentService-deployment
   labels:
-    app: payment-service
+    app: paymentService
 spec:
-  replicas: 1
+  replicas: 3
   selector:
     matchLabels:
-      app: payment-service
+      app: paymentService
   template:
     metadata:
       labels:
-        app: payment-service
+        app: paymentService
 
     spec:
       containers:
-        - name: payment-service
-          image: kedikebba/payment-service:latest
+        - name: paymentService
+          image: kedikebba/paymentService:latest
           ports:
             - containerPort: 8080
           env:
             - name: KEY1
               valueFrom:
                 configMapKeyRef:
-                  name: payment-service-config
+                  name: paymentService-config
                   key: someKey1
             - name: NEXT_SERVICE
               valueFrom:
                 configMapKeyRef:
-                  name: payment-service-config
+                  name: paymentService-config
                   key: nextService
-            - name: BANK_SERVICE
-              valueFrom:
-                configMapKeyRef:
-                  name: payment-service-config
-                  key: bankService
-            - name: PAYPAL_SERVICE
-              valueFrom:
-                configMapKeyRef:
-                  name: payment-service-config
-                  key: paypalService
-            - name: CREDITCARD_SERVICE
-              valueFrom:
-                configMapKeyRef:
-                  name: payment-service-config
-                  key: creditCardService
             - name: SERVICE_API_KEY
               valueFrom:
                 secretKeyRef:
-                  name: payment-service-secrets
+                  name: paymentService-secrets
                   key: service-api-key
+            - name: BANK_SERVICE
+              valueFrom:
+                configMapKeyRef:
+                  name: paymentService-config
+                  key: bankService
             - name: ENC_SECRET
               valueFrom:
                 secretKeyRef:
-                  name: payment-service-secrets
+                  name: paymentService-secrets
                   key: secretEncryptionKey
             - name: DB_NAME
               valueFrom:
                 configMapKeyRef:
-                  name: payment-service-config
+                  name: paymentService-config
                   key: databaseName
             - name: GROUP_ID
               valueFrom:
                 configMapKeyRef:
-                  name: payment-service-config
+                  name: paymentService-config
                   key: group_id
             - name: KAFKA
               valueFrom:
                 configMapKeyRef:
-                  name: payment-service-config
+                  name: paymentService-config
                   key: kafka
             - name: MONGO_HOST
               valueFrom:
                 configMapKeyRef:
-                  name: payment-service-config
-                  key: mongoHost
-
+                  name: paymentService-config
+                  key: mongoHos
             #MYSQL
+            - name: MYSQL_HOST
+              value: paymentService-db
+
+            - name: MYSQL_USER
+              value: root
+            - name: MYSQL_PORT
+              value: "8081"
+
+            - name: MYSQL_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: paymentService-secrets
+                  key: mysql-root-password

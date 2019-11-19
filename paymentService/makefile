@@ -1,6 +1,6 @@
 
 
-containerID := $(shell docker ps -a -q --filter ancestor=kedikebba/payment-service:latest)
+containerID := $(shell docker ps -a -q --filter ancestor=kedikebba/paymentService:latest)
 
 #===================  gradle  ===========================
 clean:
@@ -10,21 +10,21 @@ build: clean
 
 #===================  docker  ===========================
 docker-build: build
-	docker build -t kedikebba/payment-service:latest .
+	docker build -t kedikebba/paymentService:latest .
 
 
 docker-run: docker-build
-	docker run -p 8080:8080 kedikebba/payment-service:latest
+	docker run -p 8080:8080 kedikebba/paymentService:latest
 
 
 docker-login:
 	docker login
 
 docker-push: docker-login docker-build
-	docker push kedikebba/payment-service:latest
+	docker push kedikebba/paymentService:latest
 
 docker-bash:
-	docker exec -ti kedikebba/payment-service:latest /bin/sh
+	docker exec -ti kedikebba/paymentService:latest /bin/sh
 
 docker-containerID:
 	@echo running: $(containerID)
@@ -83,7 +83,7 @@ k8s-role-delete:
 
 k8s-persistence-create:
 	echo "create initial db, run this when DB service is ready"
-	echo "kubectl run -it --rm --image=mysql:5.6 --restart=Never mysql-client -- mysql -h payment-service-db -ppassword -e 'create database db_example;'"
+	echo "kubectl run -it --rm --image=mysql:5.6 --restart=Never mysql-client -- mysql -h paymentService-db -ppassword -e 'create database db_example;'"
 
 k8s-info:
 	kubectl cluster-info
@@ -93,7 +93,7 @@ k8s-info:
 	kubectl get configmaps
 	kubectl get services
 	kubectl get pods
-	echo "You can also check DB via:\n kubectl run -it --rm --image=mysql:5.6 --restart=Never mysql-client -- mysql -h payment-service-db -ppassword "
+	echo "You can also check DB via:\n kubectl run -it --rm --image=mysql:5.6 --restart=Never mysql-client -- mysql -h paymentService-db -ppassword "
 
 
 

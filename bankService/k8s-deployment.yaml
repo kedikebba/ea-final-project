@@ -1,39 +1,52 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: bank-service-deployment
+  name: bankService-deployment
   labels:
-    app: bank-service
+    app: bankService
 spec:
-  replicas: 1
+  replicas: 3
   selector:
     matchLabels:
-      app: bank-service
+      app: bankService
   template:
     metadata:
       labels:
-        app: bank-service
+        app: bankService
 
     spec:
       containers:
-        - name: bank-service
-          image: kedikebba/bank-service:latest
+        - name: bankService
+          image: kedikebba/bankService:latest
           ports:
             - containerPort: 8080
           env:
             - name: KEY1
               valueFrom:
                 configMapKeyRef:
-                  name: bank-service-config
+                  name: bankService-config
                   key: someKey1
             - name: NEXT_SERVICE
               valueFrom:
                 configMapKeyRef:
-                  name: bank-service-config
+                  name: bankService-config
                   key: nextService
             - name: SERVICE_API_KEY
               valueFrom:
                 secretKeyRef:
-                  name: bank-service-secrets
+                  name: bankService-secrets
                   key: service-api-key
             #MYSQL
+            - name: MYSQL_HOST
+              value: bankService-db
+
+            - name: MYSQL_USER
+              value: root
+            - name: MYSQL_PORT
+              value: "8081"
+
+            - name: MYSQL_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: bankService-secrets
+                  key: mysql-root-password
