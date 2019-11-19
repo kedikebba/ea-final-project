@@ -5,8 +5,6 @@ import org.springframework.data.annotation.Id;
 
 public class PaymentType {
 
-
-    @Id
     private String id;
     private Long creditcardNumber;
     private Integer cvv;

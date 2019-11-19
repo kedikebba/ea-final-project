@@ -1,12 +1,12 @@
 package ea.finalProject.paymentService.service;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
-import ea.finalProject.paymentService.model.Payment;
+import ea.finalProject.paymentService.model.PaymentDetails;
 import ea.finalProject.paymentService.model.PaymentType;
+import ea.finalProject.paymentService.model.PaymentWrapper;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
-import org.springframework.stereotype.Service;
 
 import java.util.*;
 
@@ -18,9 +18,13 @@ public interface PaymentService {
 
     public PaymentType paymentType(String json) throws JsonProcessingException;
 
-    public Payment payment(String json, PaymentType paymentType) throws JsonProcessingException;
+    public PaymentDetails payment(String result, String json, String paymentType) throws JsonProcessingException;
+    public String encrypt(String strToEncrypt);
+    public  String decrypt(String strToDecrypt);
 
-    public  String encrypt(String value);
+    public PaymentWrapper paymentWrapper(String json) throws JsonProcessingException;
 
-    public  String decrypt(String value);
+//    public  String encrypt(String value);
+//
+//    public  String decrypt(String value);
 }

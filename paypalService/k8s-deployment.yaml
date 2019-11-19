@@ -1,0 +1,52 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: paypal-service-deployment
+  labels:
+    app: paypal-service
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: paypal-service
+  template:
+    metadata:
+      labels:
+        app: paypal-service
+
+    spec:
+      containers:
+        - name: paypal-service
+          image: kedikebba/paypal-service:latest
+          ports:
+            - containerPort: 8080
+          env:
+            - name: KEY1
+              valueFrom:
+                configMapKeyRef:
+                  name: paypal-service-config
+                  key: someKey1
+            - name: NEXT_SERVICE
+              valueFrom:
+                configMapKeyRef:
+                  name: paypal-service-config
+                  key: nextService
+            - name: SERVICE_API_KEY
+              valueFrom:
+                secretKeyRef:
+                  name: paypal-service-secrets
+                  key: service-api-key
+            #MYSQL
+            - name: MYSQL_HOST
+              value: paypal-service-db
+
+            - name: MYSQL_USER
+              value: root
+            - name: MYSQL_PORT
+              value: "8081"
+
+            - name: MYSQL_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: paypal-service-secrets
+                  key: mysql-root-password

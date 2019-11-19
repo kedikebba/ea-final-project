@@ -3,28 +3,27 @@ package ea.finalProject.paymentService.service.implementation;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import ea.finalProject.paymentService.model.Payment;
+import ea.finalProject.paymentService.model.PaymentDetails;
 import ea.finalProject.paymentService.model.PaymentType;
 import ea.finalProject.paymentService.model.PaymentTypeBuilder;
+import ea.finalProject.paymentService.model.PaymentWrapper;
 import ea.finalProject.paymentService.service.PaymentService;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
 import javax.crypto.Cipher;
-import javax.crypto.spec.IvParameterSpec;
 import javax.crypto.spec.SecretKeySpec;
+import java.io.UnsupportedEncodingException;
+import java.security.MessageDigest;
+import java.security.NoSuchAlgorithmException;
 import java.time.LocalDate;
 import java.util.*;
 
 @Service
 public class PaymentServiceImp implements PaymentService {
-
-
-    private static final String key = "aesEncryptionKey";
-    private static final String initVector = "encryptionIntVec";
-
 
     @Override
     public Map<String, Object> toMap(JSONObject object)  throws JSONException {
@@ -66,85 +65,139 @@ public class PaymentServiceImp implements PaymentService {
 
     @Override
     public PaymentType paymentType(String json) throws JsonProcessingException {
-        PaymentType paymentType = new PaymentType();
+        PaymentType paymentType = null;
         ObjectMapper mapper = new ObjectMapper();
         HashMap<String, String> retMap = mapper.readValue(json, HashMap.class);
+        System.out.println(retMap.get("paymentType"));
+        System.out.println(json);
+        if (retMap.get("paymentType").equals("bank")) {
 
-        if (retMap.get("paymentType") == "bank") {
-            paymentType = new PaymentTypeBuilder()
+             paymentType = new PaymentTypeBuilder()
                     .setAccountNumber(retMap.get("accountNumber"))
                     .setBankName(retMap.get("bankName"))
                     .setName(retMap.get("name"))
                     .buildPaymentType();
-        }else if(retMap.get("paymentType") == "creditcard") {
-            paymentType = new PaymentTypeBuilder()
+
+            System.out.println(paymentType);
+
+        }else if(retMap.get("paymentType").equals("creditcard")) {
+             paymentType = new PaymentTypeBuilder()
                     .setAccountNumber(retMap.get("creditcardNumber"))
                     .setBankName(retMap.get("cvv"))
                     .setName(retMap.get("name"))
                     .setName(retMap.get("expiryDate"))
                     .buildPaymentType();
 
-        }else if(retMap.get("paymentType") == "payl") {
-            paymentType = new PaymentTypeBuilder()
+        }else if(retMap.get("paymentType").equals("paypal")) {
+             paymentType = new PaymentTypeBuilder()
                     .setAccountNumber(retMap.get("email"))
                     .setBankName(retMap.get("email"))
                     .buildPaymentType();
 
         }
+
         return paymentType;
 
     }
     @Override
-    public Payment payment(String json, PaymentType paymentType) throws JsonProcessingException {
+    public PaymentDetails payment(String result, String json, String paymentType) throws JsonProcessingException {
 
-        Payment payment = new Payment();
+        PaymentDetails paymentDetails = new PaymentDetails();
         ObjectMapper mapper = new ObjectMapper();
         HashMap<String, String> retMap = mapper.readValue(json, HashMap.class);
 
-        payment.setFirstName(retMap.get("name"));
-        payment.setLastName(retMap.get("name"));
-        payment.setEmail(retMap.get("email"));
-        payment.setPlan(retMap.get("plan"));
-        payment.setServiceProvider(retMap.get("serviceProvider"));
-        payment.setAmount(Double.valueOf(retMap.get("amount")));
-        payment.setSubscriptionDate(LocalDate.now());
-        payment.setExpiryDate(LocalDate.now().plusDays(30));
-        payment.setPaymentType(paymentType);
+        paymentDetails.setFirstName(retMap.get("firstName"));
+        paymentDetails.setLastName(retMap.get("lastName"));
+        paymentDetails.setEmail(retMap.get("email"));
+        paymentDetails.setPlan(retMap.get("plan"));
+        paymentDetails.setServiceProvider(retMap.get("serviceProvider"));
+        paymentDetails.setAmount(Double.valueOf(retMap.get("amount")));
+        paymentDetails.setSubscriptionDate(LocalDate.now());
+        paymentDetails.setExpiryDate(LocalDate.now().plusDays(30));
+        paymentDetails.setPaymentType(paymentType);
+        paymentDetails.setStatus(result);
 
-        return payment;
+        return paymentDetails;
     }
 
 
-    public  String encrypt(String value) {
+    //Encrypt and Decrypt Methods:
+
+
+    private static SecretKeySpec secretKey;
+    private static byte[] key;
+
+    @Value("${ENC_SECRET:#{null}}")
+    private static String secret;
+
+    public void setKey(String myKey)
+    {
+        MessageDigest sha = null;
         try {
-            IvParameterSpec iv = new IvParameterSpec(initVector.getBytes("UTF-8"));
-            SecretKeySpec skeySpec = new SecretKeySpec(key.getBytes("UTF-8"), "AES");
+            key = myKey.getBytes("UTF-8");
+            sha = MessageDigest.getInstance("SHA-1");
+            key = sha.digest(key);
+            key = Arrays.copyOf(key, 16);
+            secretKey = new SecretKeySpec(key, "AES");
+        }
+        catch (NoSuchAlgorithmException e) {
+            e.printStackTrace();
+        }
+        catch (UnsupportedEncodingException e) {
+            e.printStackTrace();
+        }
+    }
 
-            Cipher cipher = Cipher.getInstance("AES/CBC/PKCS5PADDING");
-            cipher.init(Cipher.ENCRYPT_MODE, skeySpec, iv);
-
-            byte[] encrypted = cipher.doFinal(value.getBytes());
-//            return Base64.encodeBase64String(encrypted);
-        } catch (Exception ex) {
-            ex.printStackTrace();
+    public String encrypt(String strToEncrypt)
+    {
+        try
+        {
+            setKey(secret);
+            Cipher cipher = Cipher.getInstance("AES/ECB/PKCS5Padding");
+            cipher.init(Cipher.ENCRYPT_MODE, secretKey);
+            return Base64.getEncoder().encodeToString(cipher.doFinal(strToEncrypt.getBytes("UTF-8")));
+        }
+        catch (Exception e)
+        {
+            System.out.println("Error while encrypting: " + e.toString());
         }
         return null;
     }
-    public  String decrypt(String encrypted) {
-        try {
-            IvParameterSpec iv = new IvParameterSpec(initVector.getBytes("UTF-8"));
-            SecretKeySpec skeySpec = new SecretKeySpec(key.getBytes("UTF-8"), "AES");
 
-            Cipher cipher = Cipher.getInstance("AES/CBC/PKCS5PADDING");
-            cipher.init(Cipher.DECRYPT_MODE, skeySpec, iv);
-//            byte[] original = cipher.doFinal(Base64.decodeBase64(encrypted));
-
-//            return new String(original);
-        } catch (Exception ex) {
-            ex.printStackTrace();
+    public  String decrypt(String strToDecrypt)
+    {
+        try
+        {
+            setKey(secret);
+            Cipher cipher = Cipher.getInstance("AES/ECB/PKCS5PADDING");
+            cipher.init(Cipher.DECRYPT_MODE, secretKey);
+            return new String(cipher.doFinal(Base64.getDecoder().decode(strToDecrypt)));
         }
-
+        catch (Exception e)
+        {
+            System.out.println("Error while decrypting: " + e.toString());
+        }
         return null;
     }
+//Create PaymentWrapper to be published to Kafka.
+    @Override
+    public PaymentWrapper paymentWrapper(String json) throws JsonProcessingException {
+
+        PaymentWrapper paymentWrapper = new PaymentWrapper();
+        ObjectMapper mapper = new ObjectMapper();
+        HashMap<String, String> retMap = mapper.readValue(json, HashMap.class);
+
+        paymentWrapper.setFirstName(retMap.get("firstName"));
+        paymentWrapper.setLastName(retMap.get("lastName"));
+        paymentWrapper.setEmail(retMap.get("email"));
+        paymentWrapper.setPlan(retMap.get("plan"));
+        paymentWrapper.setServiceProvider(retMap.get("serviceProvider"));
+        paymentWrapper.setAmount(Double.valueOf(retMap.get("amount")));
+        paymentWrapper.setPaymentType(retMap.get("paymentType"));
+        paymentWrapper.setSubscriptionDate(LocalDate.now().toString());
+        paymentWrapper.setExpiryDate(LocalDate.now().plusDays(30).toString());
+        return paymentWrapper;
+    }
+
 
 }
