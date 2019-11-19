@@ -68,8 +68,7 @@ public class PaymentServiceImp implements PaymentService {
         PaymentType paymentType = null;
         ObjectMapper mapper = new ObjectMapper();
         HashMap<String, String> retMap = mapper.readValue(json, HashMap.class);
-        System.out.println(retMap.get("paymentType"));
-        System.out.println(json);
+
         if (retMap.get("paymentType").equals("bank")) {
 
              paymentType = new PaymentTypeBuilder()
@@ -77,8 +76,6 @@ public class PaymentServiceImp implements PaymentService {
                     .setBankName(retMap.get("bankName"))
                     .setName(retMap.get("name"))
                     .buildPaymentType();
-
-            System.out.println(paymentType);
 
         }else if(retMap.get("paymentType").equals("creditcard")) {
              paymentType = new PaymentTypeBuilder()

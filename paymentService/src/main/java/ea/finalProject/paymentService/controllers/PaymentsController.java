@@ -61,10 +61,6 @@ public class PaymentsController {
 
             HashMap<String, String> paymentOptions = paymentService.paymentOptions(json);
 
-//            String paymentOption = paymentOptions.get("paymentType");
-//            String paymentEndpoint = paymentOptions.get(paymentOption);
-//            final String result = restTemplate.getForObject(String.format("http://%s/"+paymentOption,paymentEndpoint), String.class);
-//            System.out.println("\n\n\n\n\n\n"+result+"\n\n\n\n\n\n");
             final String result = restTemplate.getForObject(String.format("http://%s/bank",bankService), String.class);
 
             String paymentTypeEncrypted = paymentService.encrypt(paymentType.toString());
@@ -106,15 +102,13 @@ public class PaymentsController {
 
 //            String paymentOption = paymentOptions.get("paymentType");
 //            String paymentEndpoint = paymentOptions.get(paymentOption);
-//            System.out.println("\n\n\n\n\n\n"+String.format("http://%s/"+paymentOption,paymentEndpoint)+"\n\n\n\n\n\n");
 
-//            final String result = restTemplate.getForObject(String.format("http://%s/"+paymentOption,paymentEndpoint), String.class);
-//            System.out.println("\n\n\n\n\n\n"+result+"\n\n\n\n\n\n");
 
             final String result = restTemplate.getForObject(String.format("http://%s/bank",bankService), String.class);
+
             System.out.println("\n\n\n\n\n\n"+result+"\n\n\n\n\n\n");
             System.out.println("\n\n\n\n\n\n"+String.format("http://%s/bank",bankService)+"\n\n\n\n\n\n");
-            
+
             String paymentTypeEncrypted = paymentService.encrypt(paymentType.toString());
 
             PaymentDetails paymentDetails = paymentService.payment(result, json, paymentTypeEncrypted);
