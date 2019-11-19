@@ -10,7 +10,7 @@ data:
   creditCardService: creditcardservice.default.svc.cluster.local:8080
   paypalService: paypalservice.default.svc.cluster.local:8080
   bankService: bankservice.default.svc.cluster.local:8080
-  databaseName: paymentsdb
+  databaseName: paymentdb
   group_id: group_id
   kafka: kafka-server.default.svc.cluster.local
-  mongoHost: paymentsdb-mongodb.default.svc.cluster.local
+  mongoHost: mongodb+srv://admin:admin@eafinalproject-zxqvx.gcp.mongodb.net/test?retryWrites=true&w=majority
