@@ -12,6 +12,6 @@ data:
   bankService: bank-service.default.svc.cluster.local:8080
   databaseName: paymentsdb
   group_id: group_id
-  kafka: kafka.default.svc.cluster.local
+  kafka: kafka-server.default.svc.cluster.local
   mongoHost: paymentsdb-mongodb.default.svc.cluster.local
 #  secretEcyptionKey: RW50ZXJwcmlzZUFyY2hpdGVjdHVyZUNTNTI0QFZFUklMTEhBTEw=
