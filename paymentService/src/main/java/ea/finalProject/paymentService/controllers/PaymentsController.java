@@ -66,15 +66,17 @@ public class PaymentsController {
         if(dataHash.get("role").equals("ROLE_USER")) {
           PaymentType paymentType =  paymentService.paymentType(json);
 
-          HashMap<String, String> paymentOptions = paymentService.paymentOptions(json);
+          //HashMap<String, String> paymentOptions = paymentService.paymentOptions(json);
 
-          String paymentOption = paymentOptions.get("paymentType");
+          //String paymentOption = paymentOptions.get("paymentType");
 
-          String paymentEndpoint = paymentOptions.get(paymentOption);
+          //String paymentEndpoint = paymentOptions.get(paymentOption);
 
-          System.out.println("\n\n\n\n\n\n\n"+String.format("http://%s/"+paymentOption,paymentEndpoint)+"\n\n\n\n\n\n");
+          //System.out.println("\n\n\n\n\n\n\n"+String.format("http://%s/"+paymentOption,paymentEndpoint)+"\n\n\n\n\n\n");
 
-          final String result = restTemplate.getForObject(String.format("http://%s/"+paymentOption,paymentEndpoint), String.class);
+          //final String result = restTemplate.getForObject(String.format("http://%s/"+paymentOption,paymentEndpoint), String.class);
+
+            final String result = restTemplate.getForObject(String.format("http://%s/bank",bankService), String.class);
 
           String paymentTypeEncrypted = paymentService.encrypt(paymentType.toString());
 
