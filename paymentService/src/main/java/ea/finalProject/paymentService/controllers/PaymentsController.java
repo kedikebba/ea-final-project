@@ -23,7 +23,7 @@ import java.util.*;
 
 
 @RestController
-@RequestMapping("/payments")
+//@RequestMapping("/payments")
 public class PaymentsController {
 
     @Value("${CREDITCARD_SERVICE:#{null}}")
@@ -37,9 +37,6 @@ public class PaymentsController {
 
     @Autowired
     private RestTemplate restTemplate;
-
-    @Autowired
-    private PaymentTypeRepo paymentTypeRepo;
 
     @Autowired
     private PaymentService paymentService;
@@ -59,19 +56,25 @@ public class PaymentsController {
     }
 
 
+
     @PostMapping("/pay")
-    @HystrixCommand(fallbackMethod = "reliable")
+    @HystrixCommand(fallbackMethod = "fallBackMethod")
     public String pay( @RequestHeader (name="Authorization") String token,
                        @RequestBody String json ) throws UnsupportedEncodingException, JsonProcessingException, JsonProcessingException, JSONException {
 
         HashMap<String, String> dataHash= tokenDecoderServiceImp.decode(token);
-
         if(dataHash.get("role").equals("ROLE_USER")) {
-
           PaymentType paymentType =  paymentService.paymentType(json);
 
-            final String result = restTemplate.getForObject(String.format("http://%s/bank", bankService), String.class);
+          HashMap<String, String> paymentOptions = paymentService.paymentOptions(json);
 
+          String paymentOption = paymentOptions.get("paymentType");
+
+          String paymentEndpoint = paymentOptions.get(paymentOption);
+
+          System.out.println("\n\n\n\n\n\n\n"+String.format("http://%s/"+paymentOption,paymentEndpoint)+"\n\n\n\n\n\n");
+
+          final String result = restTemplate.getForObject(String.format("http://%s/"+paymentOption,paymentEndpoint), String.class);
 
           String paymentTypeEncrypted = paymentService.encrypt(paymentType.toString());
 
@@ -81,27 +84,17 @@ public class PaymentsController {
 
           if(paymentDetails.getStatus().equals("OK")){
               PaymentWrapper paymentWrapper = paymentService.paymentWrapper(json);
+
               this.producer.sendMessage(paymentWrapper);
           }
-
             return "Payment Type:" + paymentType.toString() +"\n\n\n\n" +"Payment: "+ paymentDetails.toString() +"Payment Encrypted:" + paymentTypeEncrypted +"\n\n\n\n" ;
         }
         return "Unauthorised";
     }
+    public String fallBackMethod(@RequestHeader (name="Authorization") String token,
+                                 @RequestBody String json ) {
 
-    @HystrixCommand(fallbackMethod = "reliable")
-    @GetMapping("/hystrix")
-    public String readingList() {
-        String uri = "http://localhost:8090/recommended";
-
-        return this.restTemplate.getForObject(uri, String.class);
-    }
-
-    public String reliable() {
         return "Sorry, Request Could not be processed!";
     }
-
-
-
 
 }

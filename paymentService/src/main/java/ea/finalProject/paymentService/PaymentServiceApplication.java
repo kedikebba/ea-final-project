@@ -16,9 +16,6 @@ import org.springframework.web.client.RestTemplate;
 @SpringBootApplication
 public class PaymentServiceApplication implements CommandLineRunner {
 
-	@Autowired
-	private PaymentRepository paymentRepository;
-
 	@Bean
 	public RestTemplate rest(RestTemplateBuilder builder) {
 		return builder.build();

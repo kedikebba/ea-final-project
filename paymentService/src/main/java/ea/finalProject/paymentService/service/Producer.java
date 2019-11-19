@@ -14,7 +14,7 @@ public class Producer {
 
 
     private static final Logger logger = LoggerFactory.getLogger(Producer.class);
-    private static final String TOPIC = "kedikebba";
+    private static final String TOPIC = "Subscription";
 
 
     @Autowired

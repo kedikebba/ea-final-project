@@ -10,3 +10,6 @@ data:
   creditCardService: creditcard-service.default.svc.cluster.local:8080
   paypalService: paypal-service.default.svc.cluster.local:8080
   bankService: bank-service.default.svc.cluster.local:8080
+  database-name: paymentsdb
+  group_id: group_id
+  kafka: kafka.default.svc.cluster.local

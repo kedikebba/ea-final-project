@@ -56,4 +56,19 @@ spec:
                 secretKeyRef:
                   name: payment-service-secrets
                   key: secret-key-enc
+            - name: DB_NAME
+              valueFrom:
+                secretKeyRef:
+                  name: payment-service-config
+                  key: database-name
+            - name: GROUP_ID
+              valueFrom:
+                secretKeyRef:
+                  name: payment-service-config
+                  key: group_id
+            - name: KAFKA
+              valueFrom:
+                secretKeyRef:
+                  name: payment-service-config
+                  key: kafka
             #MYSQL

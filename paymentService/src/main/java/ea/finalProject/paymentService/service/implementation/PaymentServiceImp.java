@@ -199,5 +199,18 @@ public class PaymentServiceImp implements PaymentService {
         return paymentWrapper;
     }
 
+    @Override
+    public HashMap<String, String> paymentOptions(String json) throws JsonProcessingException {
+        ObjectMapper mapper = new ObjectMapper();
+        HashMap<String, String> retMap = mapper.readValue(json, HashMap.class);
+        HashMap<String, String> paymentOptions = new HashMap<>();
+        paymentOptions.put("paymentType", retMap.get("paymentType"));
+        paymentOptions.put("bank", "bankService");
+        paymentOptions.put("paypal", "paypalService");
+        paymentOptions.put("creditcard", "creditCardService");
+
+        return paymentOptions;
+    }
+
 
 }
