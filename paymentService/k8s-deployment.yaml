@@ -54,21 +54,21 @@ spec:
             - name: ENC_SECRET
               valueFrom:
                 secretKeyRef:
-                  name: payment-service-config
-                  key: secretEcyptionKey
+                  name: payment-service-secrets
+                  key: secretEncryptionKey
             - name: DB_NAME
               valueFrom:
-                secretKeyRef:
+                configMapKeyRef:
                   name: payment-service-config
                   key: databaseName
             - name: GROUP_ID
               valueFrom:
-                secretKeyRef:
+                configMapKeyRef:
                   name: payment-service-config
                   key: group_id
             - name: KAFKA
               valueFrom:
-                secretKeyRef:
+                configMapKeyRef:
                   name: payment-service-config
                   key: kafka
             #MYSQL
