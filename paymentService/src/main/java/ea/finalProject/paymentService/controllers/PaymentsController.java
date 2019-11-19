@@ -72,7 +72,7 @@ public class PaymentsController {
 
           //String paymentEndpoint = paymentOptions.get(paymentOption);
 
-          //System.out.println("\n\n\n\n\n\n\n"+String.format("http://%s/"+paymentOption,paymentEndpoint)+"\n\n\n\n\n\n");
+          System.out.println("\n\n\n\n\n\n\n"+String.format("http://%s/bank",bankService)+"\n\n\n\n\n\n");
 
           //final String result = restTemplate.getForObject(String.format("http://%s/"+paymentOption,paymentEndpoint), String.class);
 
