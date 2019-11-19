@@ -124,11 +124,11 @@ public class PaymentServiceImp implements PaymentService {
     //Encrypt and Decrypt Methods:
 
 
-    private static SecretKeySpec secretKey;
-    private static byte[] key;
+    private  SecretKeySpec secretKey;
+    private  byte[] key;
 
     @Value("${ENC_SECRET}")
-    private static String secret;
+    private String secret;
 
     public void setKey(String myKey)
     {

@@ -6,7 +6,7 @@ import org.springframework.data.annotation.Id;
 public class PaymentTypeBuilder {
 
     @Id
-    private String id;
+    private String Id;
     private Long creditcardNumber;
     private Integer cvv;
     private String expiryDate;
@@ -17,7 +17,7 @@ public class PaymentTypeBuilder {
     private String password;
 
     public PaymentTypeBuilder setId(String id) {
-        this.id = id;
+        this.Id = Id;
         return  this;
     }
 

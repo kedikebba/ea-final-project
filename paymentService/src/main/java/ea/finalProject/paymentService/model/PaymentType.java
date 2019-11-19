@@ -5,7 +5,8 @@ import org.springframework.data.annotation.Id;
 
 public class PaymentType {
 
-    private String id;
+    @Id
+    private String Id;
     private Long creditcardNumber;
     private Integer cvv;
     private String expiryDate;
@@ -19,7 +20,8 @@ public class PaymentType {
     public PaymentType() {
     }
 
-    public PaymentType(Long creditcardNumber, Integer cvv, String expiryDate, String name, String bankName, String accountNumber, String email, String password) {
+    public PaymentType( Long creditcardNumber, Integer cvv, String expiryDate, String name, String bankName, String accountNumber, String email, String password) {
+       
         this.creditcardNumber = creditcardNumber;
         this.cvv = cvv;
         this.expiryDate = expiryDate;
@@ -31,7 +33,7 @@ public class PaymentType {
     }
 
     public String getId() {
-        return id;
+        return Id;
     }
 
     public Long getCreditcardNumber() {
@@ -70,7 +72,7 @@ public class PaymentType {
     @Override
     public String toString() {
         return "PaymentType{" +
-                "id='" + id + '\'' +
+                "id='" + Id + '\'' +
                 ", creditcardNumber=" + creditcardNumber +
                 ", cvv=" + cvv +
                 ", expiryDate='" + expiryDate + '\'' +
