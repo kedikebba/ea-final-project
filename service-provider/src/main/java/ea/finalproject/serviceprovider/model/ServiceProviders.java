@@ -15,11 +15,18 @@ public class ServiceProviders {
                         new ServiceProvider("ATNT", "atnt", "USA",
                                 Arrays.asList(
                                         new Plan("antn100", "online offer", 25.00, "monthly", "prepaid"),
-                                        new Plan("antn101", "limited time offer", 45.00, "monthly", "prepaid data"))
+                                        new Plan("antn101", "limited time offer", 45.00, "monthly", "prepaid data"),
+                                        new Plan("antn102", "AT&T UNLIMITED & MORE PREMIUM", 48.00, "monthly", "premium"),
+                                        new Plan("antn103", "AT&T UNLIMITED EXTRA", 40.00, "monthly", "extra pack"),
+                                        new Plan("antn104", "AT&T UNLIMITED STARTER", 35.00, "monthly", "starter pack")
+                                )
                         ),
                         new ServiceProvider("Verizon", "verizon", "USA",
                                 Arrays.asList(
-
+                                        new Plan("verizon100", "START UNLIMITED", 35.00, "monthly", "prepaid"),
+                                        new Plan("verizon101", "PLAY MORE UNLIMITED", 45.00, "monthly", "prepaid"),
+                                        new Plan("verizon102", "DO MORE UNLIMITED", 50.00, "monthly", "prepaid"),
+                                        new Plan("verizon103", "GET MORE UNLIMITED", 55.00, "monthly", "prepaid")
                                 )),
                         new ServiceProvider("MTN", "mtnng", "Nigeria",
                                 Arrays.asList(
@@ -30,7 +37,10 @@ public class ServiceProviders {
                                 )),
                         new ServiceProvider("GLO", "glong", "Nigeria",
                                 Arrays.asList(
-
+                                        new Plan("glong100", "Glo 11k/s Prepaid Plan", 100.00, "daily", "prepaid data"),
+                                        new Plan("glong100", "Glo Jollific8", 500.00, "daily", "prepaid data"),
+                                        new Plan("glong100", "Infinito", 1000.00, "monthy", "prepaid data"),
+                                        new Plan("glong100", "G-BAM", 200.00, "daily", "prepaid data")
                                 )),
                         new ServiceProvider("Etisalat", "etisalatng", "Nigeria",
                                 Arrays.asList(

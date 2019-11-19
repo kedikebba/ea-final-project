@@ -79,7 +79,6 @@ public class ServiceProviderController {
         return "Providers saved successfully";
     }
 
-
     @PostMapping("/save")
     public String addProvider(@RequestBody ServiceProvider provider) {
         try {
