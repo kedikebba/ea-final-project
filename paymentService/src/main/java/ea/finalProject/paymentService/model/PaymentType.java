@@ -21,7 +21,7 @@ public class PaymentType {
     }
 
     public PaymentType( Long creditcardNumber, Integer cvv, String expiryDate, String name, String bankName, String accountNumber, String email, String password) {
-       
+
         this.creditcardNumber = creditcardNumber;
         this.cvv = cvv;
         this.expiryDate = expiryDate;
