@@ -18,7 +18,7 @@ public interface PaymentService {
     public PaymentDetails payment(String result, String json, String paymentType) throws JsonProcessingException;
     public String encrypt(String strToEncrypt);
     public String decrypt(String strToDecrypt);
-    public PaymentWrapper paymentWrapper(String json) throws JsonProcessingException;
+    public PaymentWrapper paymentWrapper(String json, String sub) throws JsonProcessingException;
     public HashMap<String, String> paymentOptions(String json) throws JsonProcessingException;
 
 

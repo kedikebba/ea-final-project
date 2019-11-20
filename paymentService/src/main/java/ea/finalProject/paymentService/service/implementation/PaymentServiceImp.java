@@ -178,14 +178,14 @@ public class PaymentServiceImp implements PaymentService {
     }
 //Create PaymentWrapper to be published to Kafka.
     @Override
-    public PaymentWrapper paymentWrapper(String json) throws JsonProcessingException {
+    public PaymentWrapper paymentWrapper(String json, String sub) throws JsonProcessingException {
 
         PaymentWrapper paymentWrapper = new PaymentWrapper();
         ObjectMapper mapper = new ObjectMapper();
         HashMap<String, String> retMap = mapper.readValue(json, HashMap.class);
 
-        paymentWrapper.setFirstName(retMap.get("name"));
-        paymentWrapper.setLastName(retMap.get("name"));
+        paymentWrapper.setFirstName(sub);
+        paymentWrapper.setLastName(sub);
         paymentWrapper.setEmail(retMap.get("email"));
         paymentWrapper.setPlan(retMap.get("plan"));
         paymentWrapper.setServiceProvider(retMap.get("serviceProvider"));

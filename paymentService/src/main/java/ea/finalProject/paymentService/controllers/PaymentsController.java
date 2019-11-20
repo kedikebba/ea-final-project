@@ -57,6 +57,8 @@ public class PaymentsController {
 
         HashMap<String, String> dataHash = tokenDecoderServiceImp.decode(token);
         if (dataHash.get("role").equals("ROLE_USER")) {
+            String sub = dataHash.get("sub");
+
             PaymentType paymentType = paymentService.paymentType(json);
 
             HashMap<String, String> paymentOptions = paymentService.paymentOptions(json);
@@ -70,7 +72,7 @@ public class PaymentsController {
             paymentRepository.save(paymentDetails);
 
             if (paymentDetails.getStatus().equals("OK")) {
-                PaymentWrapper paymentWrapper = paymentService.paymentWrapper(json);
+                PaymentWrapper paymentWrapper = paymentService.paymentWrapper(json, sub);
 
                 this.producer.sendMessage(paymentWrapper);
             }
@@ -96,19 +98,20 @@ public class PaymentsController {
 
         HashMap<String, String> dataHash = tokenDecoderServiceImp.decode(token);
         if (dataHash.get("role").equals("ROLE_USER")) {
+            String sub = dataHash.get("sub");
             PaymentType paymentType = paymentService.paymentType(json);
 
             HashMap<String, String> paymentOptions = paymentService.paymentOptions(json);
 
             String paymentOption = paymentOptions.get("paymentType");
-            String paymentEndpoint = paymentOptions.get(paymentOption);
-
-            final String result = restTemplate.getForObject(String.format("http://%s/%s",paymentOption, paymentEndpoint), String.class);
-
-            //final String result = restTemplate.getForObject(String.format("http://%s/bank",bankService), String.class);
-
-            System.out.println("\n\n\n\n\n\n"+result+"\n\n\n\n\n\n");
-            System.out.println("\n\n\n\n\n\n"+String.format("http://%s/%s",paymentOption, paymentEndpoint)+"\n\n\n\n\n\n");
+            String result;
+            if (paymentOption.equals("bank")) {
+                  result = restTemplate.getForObject(String.format("http://%s/bank",bankService), String.class);
+            } else if (paymentOption.equals("creditcard")) {
+                  result = restTemplate.getForObject(String.format("http://%s/creditcard",creditCardService), String.class);
+            }else{
+                result = restTemplate.getForObject(String.format("http://%s/paypal",paypalService), String.class);
+            }
 
             String paymentTypeEncrypted = paymentService.encrypt(paymentType.toString());
 
@@ -117,7 +120,7 @@ public class PaymentsController {
             paymentRepository.save(paymentDetails);
 
             if (paymentDetails.getStatus().equals("OK")) {
-                PaymentWrapper paymentWrapper = paymentService.paymentWrapper(json);
+                PaymentWrapper paymentWrapper = paymentService.paymentWrapper(json,sub);
 
                 this.producer.sendMessage(paymentWrapper);
             }
