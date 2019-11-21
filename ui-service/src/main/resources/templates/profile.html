@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+	<head>
+	  	<title>Social Media Login Example</title>
+	  	<meta charset="utf-8">
+	  	<meta name="viewport" content="width=device-width, initial-scale=1">
+	  	<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css">
+	  	<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-social/5.1.1/bootstrap-social.css">
+	  	<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+	  	<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.3/umd/popper.min.js"></script>
+	  	<script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.1.3/js/bootstrap.min.js"></script>
+	  	<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
+	  	<link rel="stylesheet" href="custom.css">
+	</head>
+	<body>
+	<div class="jumbotron jumbotron-fluid">
+		<div class="container">
+			<h1>Funtastic Phone Bills Payment</h1>
+			<!--		<p>Login to view our services. You can login by using Google, Facebook, Twitter and Linked In. <br/>All type of logins are more secured by using OAuth2.</p>-->
+			<p>Welcome to your profile page</p>
+
+		</div>
+	</div>
+		<div class="container">  	
+
+  					<div>
+  						<div>
+  						<h2>User Info page</h2>
+  							Username 	
+  							<h4 th:utext="${user.getUsername()}"></h4>
+						</div>
+						<div>
+							Full Name
+							<h4 th:utext="${user.getFirstName() +' '+user.getLastName()}"></h4>
+						</div>
+						<div>
+							Email
+							<h4 th:text="${user.getEmail()}"></h4>
+						</div>
+						<div>
+							Phone Number
+							<h4 th:text="${user.getPhoneNumber()}"></h4>
+						</div>
+						<h2>Address:</h2>
+						<div>
+							State
+							<h4 th:text="${user.getState()}"></h4>
+						</div>
+						<div>
+							City
+							<h4 th:text="${user.getCity()}"></h4>
+						</div>
+						<div>
+							Country
+							<h4 th:text="${user.getCountry()}"></h4>
+						</div>
+						<div>
+							Zip Code
+							<h4 th:text="${user.getZipCode()}"></h4>
+						</div>
+
+  				</div>
+		</div>
+	</body>
+</html>
