@@ -26,18 +26,18 @@ public class PaymentsController {
 
     @Autowired
     private final Producer producer;
-//    @Value("${CREDITCARD_SERVICE:#{null}}")
-//    private String creditCardService;
-//    @Value("${BANK_SERVICE:#{null}}")
-//    private String bankService;
-//    @Value("${PAYPAL_SERVICE:#{null}}")
-//    private String paypalService;
+    @Value("${CREDITCARD_SERVICE:#{null}}")
+    private String creditCardService;
+    @Value("${BANK_SERVICE:#{null}}")
+    private String bankService;
+    @Value("${PAYPAL_SERVICE:#{null}}")
+    private String paypalService;
 
 
     //For Local Use
-    private String paypalService = "localhost:8085";
-    private String bankService = "localhost:8083";
-    private String creditCardService = "localhost:8084";
+//    private String paypalService = "localhost:8085";
+//    private String bankService = "localhost:8083";
+//    private String creditCardService = "localhost:8084";
 
 
     @Autowired

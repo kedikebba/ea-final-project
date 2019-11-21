@@ -24,6 +24,9 @@ import java.util.*;
 @Service
 public class PaymentServiceImp implements PaymentService {
 
+    private  SecretKeySpec secretKey;
+    private  byte[] key;
+
     @Override
     public Map<String, Object> toMap(JSONObject object)  throws JSONException {
         Map<String, Object> map = new HashMap<String, Object>();
@@ -122,11 +125,8 @@ public class PaymentServiceImp implements PaymentService {
     //Encrypt and Decrypt Methods:
 
 
-    private  SecretKeySpec secretKey;
-    private  byte[] key;
-
-//    @Value("${ENC_SECRET}")
-    private String secret ="kedikebba";
+    @Value("${ENC_SECRET}")
+    private String secret;
 
     public void setKey(String myKey)
     {
