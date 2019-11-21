@@ -22,17 +22,24 @@ import java.util.HashMap;
 
 
 @RestController
-//@RequestMapping("/payments")
 public class PaymentsController {
 
     @Autowired
     private final Producer producer;
-    @Value("${CREDITCARD_SERVICE:#{null}}")
-    private String creditCardService;
-    @Value("${BANK_SERVICE:#{null}}")
-    private String bankService;
-    @Value("${PAYPAL_SERVICE:#{null}}")
-    private String paypalService;
+//    @Value("${CREDITCARD_SERVICE:#{null}}")
+//    private String creditCardService;
+//    @Value("${BANK_SERVICE:#{null}}")
+//    private String bankService;
+//    @Value("${PAYPAL_SERVICE:#{null}}")
+//    private String paypalService;
+
+
+    //For Local Use
+    private String paypalService = "localhost:8085";
+    private String bankService = "localhost:8083";
+    private String creditCardService = "localhost:8084";
+
+
     @Autowired
     private RestTemplate restTemplate;
     @Autowired
@@ -57,7 +64,9 @@ public class PaymentsController {
 
         HashMap<String, String> dataHash = tokenDecoderServiceImp.decode(token);
         if (dataHash.get("role").equals("ROLE_USER")) {
-            String sub = dataHash.get("sub");
+            String firstName = dataHash.get("firstName");
+            String lastName = dataHash.get("lastName");
+            String email = dataHash.get("email");
 
             PaymentType paymentType = paymentService.paymentType(json);
 
@@ -67,16 +76,16 @@ public class PaymentsController {
 
             String paymentTypeEncrypted = paymentService.encrypt(paymentType.toString());
 
-            PaymentDetails paymentDetails = paymentService.payment(result, json, paymentTypeEncrypted);
+            PaymentDetails paymentDetails = paymentService.payment(result, json, paymentTypeEncrypted, lastName, firstName, email);
 
             paymentRepository.save(paymentDetails);
 
             if (paymentDetails.getStatus().equals("OK")) {
-                PaymentWrapper paymentWrapper = paymentService.paymentWrapper(json, sub);
-
+                PaymentWrapper paymentWrapper = paymentService.paymentWrapper(json, firstName, lastName, email);
+                System.out.println("\n\n\n\n"+paymentWrapper+"\n\n\n\n");
                 this.producer.sendMessage(paymentWrapper);
             }
-            return "Payment Type:" + paymentType.toString() + "\n\n\n\n" + "Payment: " + paymentDetails.toString() + "Payment Encrypted:";
+            return "OK";
         }
         return "Unauthorised";
     }
@@ -98,7 +107,10 @@ public class PaymentsController {
 
         HashMap<String, String> dataHash = tokenDecoderServiceImp.decode(token);
         if (dataHash.get("role").equals("ROLE_USER")) {
-            String sub = dataHash.get("sub");
+            String firstName = dataHash.get("firstName");
+            String lastName = dataHash.get("lastName");
+            String email = dataHash.get("email");
+
             PaymentType paymentType = paymentService.paymentType(json);
 
             HashMap<String, String> paymentOptions = paymentService.paymentOptions(json);
@@ -115,16 +127,20 @@ public class PaymentsController {
 
             String paymentTypeEncrypted = paymentService.encrypt(paymentType.toString());
 
-            PaymentDetails paymentDetails = paymentService.payment(result, json, paymentTypeEncrypted);
+            PaymentDetails paymentDetails = paymentService.payment(result, json, paymentTypeEncrypted, lastName, firstName, email);
 
-            paymentRepository.save(paymentDetails);
+
 
             if (paymentDetails.getStatus().equals("OK")) {
-                PaymentWrapper paymentWrapper = paymentService.paymentWrapper(json,sub);
+
+                paymentRepository.save(paymentDetails);
+
+                PaymentWrapper paymentWrapper = paymentService.paymentWrapper(json,firstName, lastName, email);
+                System.out.println("\n\n\n\n"+paymentWrapper+"\n\n\n\n");
 
                 this.producer.sendMessage(paymentWrapper);
             }
-            return "Payment Type:" + paymentType.toString() + "\n\n\n\n" + "Payment: " + paymentDetails.toString() + "Payment Encrypted:";
+            return "OK";
         }
         return "Unauthorised";
     }

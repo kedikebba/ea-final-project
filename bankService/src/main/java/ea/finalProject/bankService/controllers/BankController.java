@@ -9,6 +9,7 @@ public class BankController {
 
     @GetMapping("bank")
     public String payBank(){
+
         return "OK";
     }
 }

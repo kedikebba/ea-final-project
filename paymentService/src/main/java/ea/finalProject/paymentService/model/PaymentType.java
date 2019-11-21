@@ -13,7 +13,6 @@ public class PaymentType {
     private String name;
     private String bankName;
     private String accountNumber;
-
     private String email;
     private String password;
 

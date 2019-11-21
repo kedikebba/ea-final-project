@@ -1,6 +1,5 @@
 package ea.finalProject.paymentService.service.implementation;
 
-
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import ea.finalProject.paymentService.model.PaymentDetails;
@@ -79,10 +78,11 @@ public class PaymentServiceImp implements PaymentService {
 
         }else if(retMap.get("paymentType").equals("creditcard")) {
              paymentType = new PaymentTypeBuilder()
-                    .setAccountNumber(retMap.get("creditcardNumber"))
-                    .setBankName(retMap.get("cvv"))
+
+                    .setCreditcardNumber(Long.parseLong(String.valueOf(retMap.get("creditcardNumber"))))
+                    .setCvv(Integer.parseInt(String.valueOf(retMap.get("cvv"))))
                     .setName(retMap.get("name"))
-                    .setName(retMap.get("expiryDate"))
+                    .setExpiryDate(retMap.get("expiryDate"))
                     .buildPaymentType();
 
         }else if(retMap.get("paymentType").equals("paypal")) {
@@ -97,18 +97,19 @@ public class PaymentServiceImp implements PaymentService {
 
     }
     @Override
-    public PaymentDetails payment(String result, String json, String paymentType) throws JsonProcessingException {
+    public PaymentDetails payment(String result, String json, String paymentType, String lastName, String firstName, String email) throws JsonProcessingException {
 
         PaymentDetails paymentDetails = new PaymentDetails();
         ObjectMapper mapper = new ObjectMapper();
         HashMap<String, String> retMap = mapper.readValue(json, HashMap.class);
 
-        paymentDetails.setFirstName(retMap.get("firstName"));
-        paymentDetails.setLastName(retMap.get("lastName"));
-        paymentDetails.setEmail(retMap.get("email"));
+        paymentDetails.setFirstName(firstName);
+        paymentDetails.setLastName(lastName);
+        paymentDetails.setEmail(email);
         paymentDetails.setPlan(retMap.get("plan"));
         paymentDetails.setServiceProvider(retMap.get("serviceProvider"));
-        paymentDetails.setAmount(Double.valueOf(retMap.get("amount")));
+        Double d =  Double.parseDouble(String.valueOf(retMap.get("amount")));
+        paymentDetails.setAmount(d);
         paymentDetails.setSubscriptionDate(LocalDate.now());
         paymentDetails.setExpiryDate(LocalDate.now().plusDays(30));
         paymentDetails.setPaymentType(paymentType);
@@ -124,8 +125,8 @@ public class PaymentServiceImp implements PaymentService {
     private  SecretKeySpec secretKey;
     private  byte[] key;
 
-    @Value("${ENC_SECRET}")
-    private String secret;
+//    @Value("${ENC_SECRET}")
+    private String secret ="kedikebba";
 
     public void setKey(String myKey)
     {
@@ -178,22 +179,28 @@ public class PaymentServiceImp implements PaymentService {
     }
 //Create PaymentWrapper to be published to Kafka.
     @Override
-    public PaymentWrapper paymentWrapper(String json, String sub) throws JsonProcessingException {
+    public PaymentWrapper paymentWrapper(String json, String firstName, String lastName, String email) throws JsonProcessingException {
 
         PaymentWrapper paymentWrapper = new PaymentWrapper();
         ObjectMapper mapper = new ObjectMapper();
         HashMap<String, String> retMap = mapper.readValue(json, HashMap.class);
 
-        paymentWrapper.setFirstName(sub);
-        paymentWrapper.setLastName(sub);
-        paymentWrapper.setEmail(retMap.get("email"));
+        paymentWrapper.setFirstName(firstName);
+        paymentWrapper.setLastName(lastName);
+        paymentWrapper.setEmail(email);
         paymentWrapper.setPlan(retMap.get("plan"));
         paymentWrapper.setServiceProvider(retMap.get("serviceProvider"));
-        paymentWrapper.setAmount(Double.valueOf(retMap.get("amount")));
+        Double d =  Double.parseDouble(String.valueOf(retMap.get("amount")));
+        paymentWrapper.setAmount(d);
         paymentWrapper.setPaymentType(retMap.get("paymentType"));
         paymentWrapper.setSubscriptionDate(LocalDate.now().toString());
 
-        paymentWrapper.setExpiryDate(LocalDate.now().plusDays(1).toString());
+        if(retMap.get("period").equals("daily")){
+            paymentWrapper.setExpiryDate(LocalDate.now().plusDays(1).toString());
+        }else{
+            paymentWrapper.setExpiryDate(LocalDate.now().plusDays(30).toString());
+        }
+
         return paymentWrapper;
     }
 

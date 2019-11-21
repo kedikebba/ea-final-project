@@ -111,4 +111,20 @@ public class PaymentWrapper {
     public void setExpiryDate(String expiryDate) {
         this.expiryDate = expiryDate;
     }
+
+    @Override
+    public String toString() {
+        return "PaymentWrapper{" +
+                "Id='" + Id + '\'' +
+                ", firstName='" + firstName + '\'' +
+                ", lastName='" + lastName + '\'' +
+                ", email='" + email + '\'' +
+                ", plan='" + plan + '\'' +
+                ", serviceProvider='" + serviceProvider + '\'' +
+                ", amount=" + amount +
+                ", paymentType='" + paymentType + '\'' +
+                ", subscriptionDate='" + subscriptionDate + '\'' +
+                ", expiryDate='" + expiryDate + '\'' +
+                '}';
+    }
 }

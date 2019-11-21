@@ -18,8 +18,8 @@ import java.util.Map;
 @Configuration
 public class KafkaProducerConfig {
 
-    @Value(value = "${KAFKA}")
-    private String bootstrapAddress;
+//    @Value(value = "${KAFKA}")
+    private String bootstrapAddress = "localhost:9092";
 
     @Bean
     public ProducerFactory<String, PaymentWrapper> producerFactory() {

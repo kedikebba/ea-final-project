@@ -41,6 +41,16 @@ spec:
                 configMapKeyRef:
                   name: paymentservice-config
                   key: bankService
+            - name: PAYPAL_SERVICE
+              valueFrom:
+                configMapKeyRef:
+                  name: paymentservice-config
+                  key: paypalService
+            - name: CREDITCARD_SERVICE
+              valueFrom:
+                configMapKeyRef:
+                  name: paymentservice-config
+                  key: creditCardService
             - name: ENC_SECRET
               valueFrom:
                 secretKeyRef:

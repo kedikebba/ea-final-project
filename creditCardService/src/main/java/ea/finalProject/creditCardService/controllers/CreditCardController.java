@@ -10,6 +10,7 @@ public class CreditCardController {
 
     @GetMapping("creditcard")
     public String payCredit(){
+
         return "OK";
     }
 }
