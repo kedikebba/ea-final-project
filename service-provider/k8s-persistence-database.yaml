@@ -1,0 +1,51 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: svcprovider-db
+spec:
+  ports:
+    - protocol: TCP
+      port: 8090
+      targetPort: svcp-db-port
+  selector:
+    app: svcprovider-db
+    tier: db
+  clusterIP: None
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: svcprovider-db
+spec:
+  selector:
+    matchLabels:
+      app: svcprovider-db
+      tier: db
+  strategy:
+    type: Recreate
+  template:
+    metadata:
+      labels:
+        app: svcprovider-db
+        tier: db
+    spec:
+      containers:
+        - image: mysql:5.6
+          name: svcprovider-db
+          env:
+            # Use secret in real usage
+            - name: MYSQL_ROOT_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: svcprovider-secrets
+                  key: mysql-root-password
+          ports:
+            - containerPort: 3306
+              name: svcp-db-port
+          volumeMounts:
+            - name: svcprovider-db-persistent-storage
+              mountPath: /var/lib/mysql
+      volumes:
+        - name: svcprovider-db-persistent-storage
+          persistentVolumeClaim:
+            claimName: svcprovider-pv-claim

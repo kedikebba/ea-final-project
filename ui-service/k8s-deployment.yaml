@@ -1,0 +1,33 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: ui-service-deployment
+  labels:
+    app: ui-service
+spec:
+  replicas: 3
+  selector:
+    matchLabels:
+      app: ui-service
+  template:
+    metadata:
+      labels:
+        app: ui-service
+
+    spec:
+      containers:
+        - name: ui-service
+          image: chibuisi/ui-service:latest
+          ports:
+            - containerPort: 8080
+	  env:
+            - name: URI
+              valueFrom:
+                configMapKeyRef:
+                  name: svcprovider-config
+                  key: uri
+            - name: DB
+              valueFrom:
+                configMapKeyRef:
+                  name: svcprovider-config
+                  key: db

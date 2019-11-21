@@ -1,0 +1,33 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: ${serviceName}-deployment
+  labels:
+    app: ${serviceName}
+spec:
+  replicas: 3
+  selector:
+    matchLabels:
+      app: ${serviceName}
+  template:
+    metadata:
+      labels:
+        app: ${serviceName}
+
+    spec:
+      containers:
+        - name: ${serviceName}
+          image: ${serviceImage}
+          ports:
+            - containerPort: 8080
+	  env:
+            - name: URI
+              valueFrom:
+                configMapKeyRef:
+                  name: svcprovider-config
+                  key: uri
+            - name: DB
+              valueFrom:
+                configMapKeyRef:
+                  name: svcprovider-config
+                  key: db

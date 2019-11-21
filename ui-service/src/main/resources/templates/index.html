@@ -1,0 +1,170 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+	<title>Funtastic Phone Pay</title>
+	<meta charset="utf-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+	<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css">
+	<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-social/5.1.1/bootstrap-social.css">
+	<link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.11.2/css/all.css" integrity="sha384-KA6wR/X5RY4zFAHpv/CnoG2UW1uogYfdnP67Uv7eULvTveboZJg0qUpmJZb5VqzN" crossorigin="anonymous">
+	<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+	<script type="text/javascript" src="js/scriptFile.js"></script>
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.3/umd/popper.min.js"></script>
+	<script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.1.3/js/bootstrap.min.js"></script>
+
+	<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
+<!--	<link rel="stylesheet" href="css/custom.css">-->
+</head>
+<body>
+<div class="jumbotron jumbotron-fluid">
+	<div class="container">
+		<h1>Get your Subscription</h1>
+		<form method="get" action="/profile">
+			<button type="submit" class="btn btn-link" style="float: right">View Profile</button>
+		</form>
+	</div>
+</div>
+<div class="container">
+	<form method="get" action="/pay" th:object="${paywrapper}">
+	<input type="hidden" id="accsvc" th:value="${accsvc}">
+	<div class="row">
+		<div class="col-sm-3"></div>
+		<div class="col-sm-6">
+				<div class="form-group">
+					<label for="country">Select Country</label>
+<!--					<span th:if="${#fields.hasErrors('country')}" th:errors="*{country}"
+						  class="badge badge-danger"></span>-->
+					<select class="form-control" id="country" name="country" required>
+					</select>
+					<i class="fas fa-fan fa-spin fa-1x" id="loader"></i>
+				</div>
+				<div class="form-group">
+					<label for="provider">Select Provider</label>
+					<span th:if="${#fields.hasErrors('serviceProvider')}" th:errors="*{serviceProvider}" class="badge badge-danger"></span>
+					<select class="form-control" id="provider" name="serviceProvider" th:value="${paywrapper.serviceProvider}" required>
+					</select>
+					<i class="fas fa-fan fa-spin fa-1x" id="loader2"></i>
+				</div>
+				<div class="form-group">
+					<label for="plan">Select Plan</label>
+					<span th:if="${#fields.hasErrors('planName')}" th:errors="*{planName}" class="badge badge-danger"></span>
+					<select class="form-control" id="plan" name="planName" th:value="${paywrapper.planName}" required>
+					</select>
+				</div>
+			<table id="sub-details" class="table table-hover" hidden>
+				<thead>
+				</thead>
+				<tbody>
+				</tbody>
+			</table>
+			<input id="price" type="hidden" th:name="price" th:value="${paywrapper.price}">
+			<input id="time" type="hidden" th:name="time" th:value="${paywrapper.time}">
+<!--			<input id="category" type="hidden" th:name="category" th:value="${paywrapper.category}">-->
+			<button id="pay" type="submit" class="btn btn-primary" style="float: right" disabled>Submit</button>
+		</div>
+
+	</div>
+	</form>
+</div>
+<script>
+	$(document).ready(function () {
+		$("#loader").hide();
+		$("#loader2").hide();
+		$.ajax({
+			"url": "http://34.70.154.170/provider/list",
+			"dataType": "json",
+			"type": "GET"
+
+		}).done(function (data) {
+			var arr = [];
+			$.each(data,function (k,v) {
+				arr.push(v.providerCountry);
+			});
+			var uCountry = [];
+			$.each(arr, function(i, el){
+				if($.inArray(el, uCountry) === -1) uCountry.push(el);
+			});
+			var country = $("#country");
+			country.append('<option value="" disabled selected>Select Country</option>');
+			$.each(uCountry,function (k,v) {
+				country.append('<option value="'+v+'">'+v+'</option>')
+			});
+
+		})
+	});
+	let savedPlan = [];
+	$("#country").on("change",function () {
+		$("#provider").children().remove();
+		$("#plan").children().remove();
+		$("#sub-details").children().remove();
+		$("#pay").attr("disabled", true);
+
+		savedPlan = [];
+		var selectedCountry = $("#country").val();
+		$.ajax({
+			"url": "http://34.70.154.170/provider/list/"+selectedCountry,
+			"dataType": "json",
+			"type": "GET"
+
+		}).done(function (data2) {
+			var provider = $("#provider");
+			provider.append('<option value="" disabled selected>Select Provider</option>');
+			$.each(data2,function (k,v) {
+				provider.append('<option value="'+v.providerCode+'">'+v.providerName+'</option>')
+			});
+		}).always(function() {
+			$("#loader").hide();
+		});
+		$("#loader").show();
+	});
+
+	var planDetails;
+	$("#provider").on("change",function () {
+		$("#plan").children().remove();
+		$("#sub-details").children().remove();
+		$("#pay").attr("disabled", true);
+		var selectedProvider = $("#provider").val();
+		$.ajax({
+			"url": "http://34.70.154.170/provider/"+selectedProvider,
+			"dataType": "json",
+			"type": "GET"
+
+		}).done(function (data3) {
+			planDetails = data3;
+			var plan = $("#plan");
+			plan.append('<option value="" disabled selected>Select Plan</option>');
+			$.each(data3.plans,function (k,v) {
+				plan.append('<option value="'+v.planCode+'">'+v.planName+'</option>')
+			});
+		}).always(function() {
+			$("#loader").hide();
+		});
+		$("#loader").show();
+	});
+	$("#plan").on("change",function () {
+		var plan = $("#plan").val();
+		$("#sub-details").children().remove();
+		$("#sub-details").removeAttr("hidden");
+		$("#sub-details").append('<tr class="table-active"><td>Plan Name</td><td>Price</td><td>Time</td><td>Category</td></tr>');
+
+		$.each(planDetails.plans,function (k,v) {
+			if(v.planCode==plan){
+
+				$("#sub-details").append(
+						'<tr><td>'+v.planName+'</td><td>'+v.price+'</td><td>'+v.time+'</td><td>'+v.category+'</td></tr>'
+				);
+				// savedPlan[0] = v.planName;
+				// savedPlan[1] = v.price;
+				// savedPlan[2] = v.time;
+				// savedPlan[3] = v.category;
+				$("#price").val(v.price);
+				$("#time").val(v.time);
+				$("#category").val(v.category);
+				$("#pay").attr("disabled", false);
+		}});
+	});
+
+</script>
+</body>
+</html>
+<!--alert($("input[name='accsvc']").value);-->

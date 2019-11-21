@@ -38,9 +38,9 @@ public class ServiceProviders {
                         new ServiceProvider("GLO", "glong", "Nigeria",
                                 Arrays.asList(
                                         new Plan("glong100", "Glo 11k/s Prepaid Plan", 100.00, "daily", "prepaid data"),
-                                        new Plan("glong100", "Glo Jollific8", 500.00, "daily", "prepaid data"),
-                                        new Plan("glong100", "Infinito", 1000.00, "monthy", "prepaid data"),
-                                        new Plan("glong100", "G-BAM", 200.00, "daily", "prepaid data")
+                                        new Plan("glong101", "Glo Jollific8", 500.00, "daily", "prepaid data"),
+                                        new Plan("glong102", "Infinito", 1000.00, "monthy", "prepaid data"),
+                                        new Plan("glong103", "G-BAM", 200.00, "daily", "prepaid data")
                                 )),
                         new ServiceProvider("Etisalat", "etisalatng", "Nigeria",
                                 Arrays.asList(

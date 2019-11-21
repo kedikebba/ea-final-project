@@ -1,0 +1,51 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: ui-service-db
+spec:
+  ports:
+    - protocol: TCP
+      port: 10
+      targetPort: ui-service-db-port
+  selector:
+    app: ui-service-db
+    tier: db
+  clusterIP: None
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: ui-service-db
+spec:
+  selector:
+    matchLabels:
+      app: ui-service-db
+      tier: db
+  strategy:
+    type: Recreate
+  template:
+    metadata:
+      labels:
+        app: ui-service-db
+        tier: db
+    spec:
+      containers:
+        - image: mysql:5.6
+          name: ui-service-db
+          env:
+            # Use secret in real usage
+            - name: MYSQL_ROOT_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: ui-service-secrets
+                  key: mysql-root-password
+          ports:
+            - containerPort: 3306
+              name: ui-service-db-port
+          volumeMounts:
+            - name: ui-service-db-persistent-storage
+              mountPath: /var/lib/mysql
+      volumes:
+        - name: ui-service-db-persistent-storage
+          persistentVolumeClaim:
+            claimName: ui-service-pv-claim

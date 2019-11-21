@@ -1,5 +1,6 @@
 package ea.finalproject.serviceprovider.repository;
 
+import ea.finalproject.serviceprovider.model.Plan;
 import ea.finalproject.serviceprovider.model.ServiceProvider;
 import org.springframework.data.mongodb.repository.MongoRepository;
 import org.springframework.stereotype.Repository;
@@ -15,4 +16,7 @@ public interface ServiceProviderRepo extends MongoRepository<ServiceProvider, St
     public ServiceProvider getServiceProviderByProviderCode(String codeName);
 
     public void deleteServiceProviderByProviderCode(String id);
+
+
+
 }

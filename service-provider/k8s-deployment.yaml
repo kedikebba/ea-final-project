@@ -1,0 +1,33 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: svcprovider-deployment
+  labels:
+    app: svcprovider
+spec:
+  replicas: 3
+  selector:
+    matchLabels:
+      app: svcprovider
+  template:
+    metadata:
+      labels:
+        app: svcprovider
+
+    spec:
+      containers:
+        - name: svcprovider
+          image: chibuisi/svcprovider:latest
+          ports:
+            - containerPort: 8080
+          env:
+            - name: URI
+              valueFrom:
+                configMapKeyRef:
+                  name: svcprovider-config
+                  key: uri
+            - name: DB
+              valueFrom:
+                configMapKeyRef:
+                  name: svcprovider-config
+                  key: db
