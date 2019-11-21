@@ -1,15 +1,14 @@
 package ea.finalProject.paymentService.repository;
 
 
-import ea.finalProject.paymentService.model.Payment;
+import ea.finalProject.paymentService.model.PaymentDetails;
 import org.springframework.data.mongodb.repository.MongoRepository;
 
-import java.util.List;
+public interface PaymentRepository extends MongoRepository<PaymentDetails, String> {
 
-public interface PaymentRepository extends MongoRepository<Payment, String> {
+    public PaymentDetails findPaymentByAmountEquals(Double value);
+    public PaymentDetails getFirstByAmountEquals(Double value);
 
-    public Payment findPaymentByAmountEquals(Double value);
-    public Payment getFirstByAmountEquals(Double value);
 //    public  List<Payment> findAllByPaymentType(String paymentType);
 
 

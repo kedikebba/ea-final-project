@@ -1,6 +1,7 @@
 package ea.finalProject.paymentService.configs;
 
-import ea.finalProject.paymentService.model.Payment;
+import ea.finalProject.paymentService.model.PaymentDetails;
+import ea.finalProject.paymentService.model.PaymentWrapper;
 import org.apache.kafka.clients.producer.ProducerConfig;
 import org.apache.kafka.common.serialization.StringSerializer;
 import org.springframework.beans.factory.annotation.Value;
@@ -17,11 +18,11 @@ import java.util.Map;
 @Configuration
 public class KafkaProducerConfig {
 
-    @Value(value = "${kafka.bootstrapAddress}")
-    private String bootstrapAddress;
+    @Value(value = "${KAFKA}")
+    private String bootstrapAddress; /*= "localhost:9092";*/
 
     @Bean
-    public ProducerFactory<String, Payment> producerFactory() {
+    public ProducerFactory<String, PaymentWrapper> producerFactory() {
         Map<String, Object> configProps = new HashMap<>();
         configProps.put(ProducerConfig.BOOTSTRAP_SERVERS_CONFIG, bootstrapAddress);
         configProps.put(ProducerConfig.KEY_SERIALIZER_CLASS_CONFIG,StringSerializer.class);
@@ -30,7 +31,7 @@ public class KafkaProducerConfig {
     }
 
     @Bean
-    public KafkaTemplate<String, Payment> kafkaTemplate() {
+    public KafkaTemplate<String, PaymentWrapper> kafkaTemplate() {
         return new KafkaTemplate<>(producerFactory());
     }
 }
