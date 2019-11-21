@@ -56,7 +56,7 @@ public class JwtAuthenticationController {
 		return ResponseEntity.ok(new JwtResponse(token));
 	}
 
-	@CachePut(value = "users", key = "#user.username")
+//	@CachePut(value = "users", key = "#user.username")
 	@RequestMapping(value = "/register", method = RequestMethod.POST)
 	public User saveUser(@RequestBody UserDTO user) throws Exception {
 		return userDetailsService.save(user);

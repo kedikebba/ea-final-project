@@ -56,11 +56,11 @@
 							<form th:action="@{/login}" th:object="${loginRequest}" method='POST'>
 	  							 <div class="form-group">
 								    <label for="usernameTxt">Username:</label>
-								    <input type="text" th:feild="*{username}" class="form-control" id="usernameTxt" autofocus name="username">
+								    <input type="text" th:feild="*{username}" class="form-control" id="usernameTxt" required autofocus name="username">
 								  </div>
 								  <div class="form-group">
 								    <label for="pwd">Password:</label>
-								    <input type="password" th:feild="*{password}" class="form-control" id="pwd" name="password">
+								    <input type="password" th:feild="*{password}" class="form-control" id="pwd" required name="password">
 								  </div>
 								  <div class="d-flex justify-content-between mb-3">
 								    <div class="p-2"><a href="/signup"><button type="button" class="btn btn-success">Create New Account</button></a></div>

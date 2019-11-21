@@ -13,6 +13,23 @@ public class UserDTO {
     private String role;
     private String email;
 
+    public UserDTO(){}
+
+    public UserDTO(String username, String password, String firstName, String lastName,
+                String city, String state, String country, String zipCode, String phoneNumber,
+                String email) {
+        this.username = username;
+        this.password = password;
+        this.firstName = firstName;
+        this.lastName = lastName;
+        this.city = city;
+        this.state = state;
+        this.country = country;
+        this.zipCode = zipCode;
+        this.phoneNumber = phoneNumber;
+        this.role = role;
+        this.email = email;
+    }
     public String getUsername() {
 		return username;
 	}

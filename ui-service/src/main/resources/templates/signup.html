@@ -15,7 +15,8 @@
 	<body>
 		<div class="jumbotron jumbotron-fluid">
 	  		<div class="container">
-<!--	    		<h1>Social Media Login</h1>      -->
+				<h1>Funtastic Phone Bills Payment</h1>
+				<p>User Registration</p>
 <!--	    		<p>Social media login example. You can login by using Google, Facebook, Twitter and Linked In. <br/>All type of logins are more secured by using OAuth2.</p>-->
 	  		</div>
 		</div>
@@ -34,20 +35,20 @@
 <!--         						<input type="hidden" th:field="*{signInProvider}" />  			-->
   						 <div class="form-group">
 							    <label for="firstName">First Name:</label>
-							    <input type="text" class="form-control" id="firstName" autofocus th:field="*{firstName}"><BR/>
+							    <input required type="text" class="form-control" id="firstName" autofocus th:field="*{firstName}"><BR/>
 							    <div class="alert alert-danger" th:if="${#fields.hasErrors('firstName')}" th:errors="*{firstName}">
   								</div>
 							  </div>
 							   <div class="form-group">
 							    <label for="lastName">Last Name:</label>
-							    <input type="text" class="form-control" id="lastName" th:field="*{lastName}"><BR/>
+							    <input required type="text" class="form-control" id="lastName" th:field="*{lastName}"><BR/>
 							    <div class="alert alert-danger" th:if="${#fields.hasErrors('lastName')}" th:errors="*{lastName}">
   								</div>
 							  </div>
 
 							<div class="form-group">
 								<label for="username">Username:</label>
-								<input type="text" class="form-control" id="username" th:field="*{username}"><BR/>
+								<input required type="text" class="form-control" id="username" th:field="*{username}"><BR/>
 								<div class="alert alert-danger" th:if="${#fields.hasErrors('username')}" th:errors="*{username}">
 								</div>
 							</div>
@@ -61,38 +62,38 @@
 							  
 							   <div class="form-group">
 							    <label for="email">Email:</label>
-							    <input type="text" class="form-control" id="email" th:field="*{email}"><BR/>
+							    <input required type="text" class="form-control" id="email" th:field="*{email}"><BR/>
 							    <div class="alert alert-danger" th:if="${#fields.hasErrors('email')}" th:errors="*{email}">
   								</div>
 							  </div>
   						
   							 <div class="form-group">
 							    <label for="city">City:</label>
-							    <input type="text" class="form-control" id="city" th:field="*{city}"><BR/>
+							    <input required type="text" class="form-control" id="city" th:field="*{city}"><BR/>
 							    <div class="alert alert-danger" th:if="${#fields.hasErrors('city')}" th:errors="*{city}">..
   								</div>
 							  </div>
 							  <div class="form-group">
 							    <label for="state">State:</label>
-							    <input type="text" class="form-control" id="state" th:field="*{state}"><BR/>
+							    <input required type="text" class="form-control" id="state" th:field="*{state}"><BR/>
 							    <div class="alert alert-danger" th:if="${#fields.hasErrors('state')}" th:errors="*{state}">..
   								</div>
 							  </div>
 							<div class="form-group">
 								<label for="country">Country:</label>
-								<input type="text" class="form-control" id="country" th:field="*{country}"><BR/>
+								<input required type="text" class="form-control" id="country" th:field="*{country}"><BR/>
 								<div class="alert alert-danger" th:if="${#fields.hasErrors('country')}" th:errors="*{country}">..
 								</div>
 							</div>
 							<div class="form-group">
 								<label for="zipCode">Zipcode:</label>
-								<input type="text" class="form-control" id="zipCode" th:field="*{zipCode}"><BR/>
+								<input required type="text" class="form-control" id="zipCode" th:field="*{zipCode}"><BR/>
 								<div class="alert alert-danger" th:if="${#fields.hasErrors('zipCode')}" th:errors="*{zipCode}">..
 								</div>
 							</div>
 							<div class="form-group">
 								<label for="phoneNumber">Phone Number:</label>
-								<input type="text" class="form-control" id="phoneNumber" th:field="*{phoneNumber}"><BR/>
+								<input required type="text" class="form-control" id="phoneNumber" th:field="*{phoneNumber}"><BR/>
 								<div class="alert alert-danger" th:if="${#fields.hasErrors('phoneNumber')}" th:errors="*{phoneNumber}">..
 								</div>
 							</div>
