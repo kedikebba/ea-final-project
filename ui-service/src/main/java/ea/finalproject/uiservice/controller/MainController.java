@@ -1,7 +1,12 @@
 package ea.finalproject.uiservice.controller;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
+import com.netflix.hystrix.contrib.javanica.annotation.HystrixCommand;
 import ea.finalproject.uiservice.model.LoginRequest;
+import ea.finalproject.uiservice.model.PaymentWrapper;
+
+import ea.finalproject.uiservice.model.LoginRequest;
+
 import ea.finalproject.uiservice.model.User;
 import ea.finalproject.uiservice.service.TokenDecoderService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -12,6 +17,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -26,13 +32,22 @@ import java.util.HashMap;
 @Controller
 public class MainController {
 
+
+    //@Value("{ACC_SERVICE:#{null}}")
+    String accountSvc ="something";
+
+    @Autowired
+    private RestTemplate restTemplate;
+
     @Autowired
     private RestTemplate restTemplate;
     @Autowired
     private TokenDecoderService tokenDecoderService;
 
     @GetMapping({"/","/index"})
-    public String showHomePage() {
+    public String showHomePage(Model model) {
+        model.addAttribute("accsvc",accountSvc);
+        model.addAttribute("paywrapper",new PaymentWrapper());
         return "index";
     }
 
@@ -40,6 +55,48 @@ public class MainController {
     public String showLoginPage(@ModelAttribute LoginRequest loginRequest){
         return "login";
     }
+    @HystrixCommand(fallbackMethod = "reliable")
+    @PostMapping("/login")
+    public String checkLogin(@Valid @ModelAttribute LoginRequest loginRequest, BindingResult bindingResult, Model model){
+        if(bindingResult.hasErrors()){
+            model.addAttribute("errors", bindingResult.getAllErrors());
+            return "login";
+        }
+       final String uri = String.format("http://34.70.86.26/user/login");
+        ResponseEntity<String> response = restTemplate.exchange(uri, HttpMethod.POST, new HttpEntity<>(loginRequest),
+                new ParameterizedTypeReference<String>() {
+                });
+        if(response.getStatusCode().is2xxSuccessful())
+        {
+            System.out.println(response.getBody());
+
+            model.addAttribute("token",response.getBody());
+
+        }
+        return "redirect:/index";
+    }
+
+
+    @GetMapping("/signup")
+    public String registerPage(Model model){
+        model.addAttribute("user", new User());
+        return "signup";
+    }
+    @HystrixCommand(fallbackMethod = "reliable")
+    @PostMapping("/signup")
+    public String register(@Valid @ModelAttribute User user, BindingResult bindingResult, Model model){
+        if(bindingResult.hasErrors()){
+            model.addAttribute("errors", bindingResult.getAllErrors());
+            return "signup";
+        }
+        final String uri = "http://34.70.86.26/user/register";
+        restTemplate.postForLocation(uri, user);
+        return "redirect:/login";
+    }
+    @HystrixCommand(fallbackMethod = "reliable")
+    @GetMapping("/profile")
+    public String getProfile(Model model) throws UnsupportedEncodingException, JsonProcessingException {
+        HashMap<String, String> dataHash= tokenDecoderService.decode((String) model.getAttribute("token"));
 
     @PostMapping("/login")
     public String checkLogin(@Valid @ModelAttribute LoginRequest loginRequest, BindingResult bindingResult, Model model){
@@ -93,5 +150,8 @@ public class MainController {
             e.printStackTrace();
         }
         return "login";
+    }
+    public String reliable(){
+        return "No response at this time";
     }
 }

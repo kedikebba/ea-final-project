@@ -34,7 +34,12 @@ public class AppSecurityConfig extends WebSecurityConfigurerAdapter {
     @Override
     protected void configure(HttpSecurity http) throws Exception {
         http.csrf().disable()
+
+                .authorizeRequests().antMatchers("/login","/profile","/pay","/success",
+                "/payPal","/creditCard","/index","/signup", "/bankAccount").permitAll()
+
                 .authorizeRequests().antMatchers("/login","/","/index","/signup","/profile").permitAll()
+
                 .anyRequest().authenticated()
                 .and()
 //                .formLogin()
@@ -46,9 +51,9 @@ public class AppSecurityConfig extends WebSecurityConfigurerAdapter {
                 .logout()
                 .logoutRequestMatcher(new AntPathRequestMatcher("/logout"))
                 .logoutSuccessUrl("/login?logout")
-                .permitAll()
-                .and().sessionManagement()
-                .sessionCreationPolicy(SessionCreationPolicy.STATELESS);
+                .permitAll();
+//                .and().sessionManagement()
+//                .sessionCreationPolicy(SessionCreationPolicy.STATELESS);
         //http.addFilterBefore(filter, UsernamePasswordAuthenticationFilter.class);
     }
 

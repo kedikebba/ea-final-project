@@ -18,7 +18,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.logging.Logger;
 
-
+@CrossOrigin
 @RestController
 @RequestMapping("/provider")
 public class ServiceProviderController {
@@ -36,7 +36,6 @@ public class ServiceProviderController {
     private PlansRepository plansRepository;
 
     //private static final Logger log = LoggerFactory.getLogger(ServiceProviderController.class);
-    //private static final Logger log = Logger.getLogger("service-provider");
 
     @GetMapping("/list")
     public List<ServiceProvider> listProvider() {
@@ -45,13 +44,13 @@ public class ServiceProviderController {
     }
 
     @GetMapping("/{codeName}")
-    public ServiceProvider getProvider(@RequestHeader(name = "Authorization") String token, @PathVariable String codeName) throws UnsupportedEncodingException, JsonProcessingException {
-        HashMap<String, String> data = tokenDecoder.decode(token);
-        if (data.get("role").equals("ROLE_USER")) {
-            //log.info("retrieving service providers");
-            return serviceProviderRepo.getServiceProviderByProviderCode(codeName);
-        }
-        return null;
+    public ServiceProvider getProvider(/*@RequestHeader(name = "Authorization") String token,*/ @PathVariable String codeName) throws UnsupportedEncodingException, JsonProcessingException {
+//        HashMap<String, String> data = tokenDecoder.decode(token);
+//        if (data.get("role").equals("ROLE_USER")) {
+//            //log.info("retrieving service providers");
+//            return serviceProviderRepo.getServiceProviderByProviderCode(codeName);
+//        }
+        return serviceProviderRepo.getServiceProviderByProviderCode(codeName);
     }
 
     @GetMapping("/list/{country}")
@@ -78,7 +77,6 @@ public class ServiceProviderController {
         }
         return "Providers saved successfully";
     }
-
 
     @PostMapping("/save")
     public String addProvider(@RequestBody ServiceProvider provider) {

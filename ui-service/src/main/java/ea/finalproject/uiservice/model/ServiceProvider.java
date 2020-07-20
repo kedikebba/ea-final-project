@@ -1,17 +1,10 @@
-package ea.finalproject.serviceprovider.model;
+package ea.finalproject.uiservice.model;
 
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
-import lombok.Data;
-import org.springframework.data.annotation.Id;
-import org.springframework.data.mongodb.core.mapping.Document;
 
 import java.util.List;
 
-@Data
-@Document(collection = "providers")
 public class ServiceProvider {
-    @Id
     private String providerId;
     private String providerName;
     private String providerCode;
