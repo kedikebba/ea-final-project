@@ -30,7 +30,7 @@
 <!--  						-->
 <!--&lt;!&ndash;  						<div class="alert alert-danger" th:if="${errorMessage != null}" th:text="${errorMessage}">&ndash;&gt;-->
 <!--  						</div>-->
-  						<form th:object="${user}" action="/signup" method="POST">
+  						<form th:object="${user}" th:action="@{/signup}" method="POST">
 <!--  							  <input type="hidden" th:field="*{userId}"  />-->
 <!--         						<input type="hidden" th:field="*{signInProvider}" />  			-->
   						 <div class="form-group">

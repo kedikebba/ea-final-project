@@ -1,0 +1,42 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: accsv-deployment
+  labels:
+    app: accsv
+spec:
+  replicas: 3
+  selector:
+    matchLabels:
+      app: accsv
+  template:
+    metadata:
+      labels:
+        app: accsv
+
+    spec:
+      containers:
+        - name: accsv
+          image: sarose301/accsv:latest
+          ports:
+            - containerPort: 8080
+          env:
+            - name: JWT_SECRET
+              valueFrom:
+                configMapKeyRef:
+                  name: accsv-config
+                  key: jwt
+            #MONGO
+            - name: DB_PATH
+              valueFrom:
+                configMapKeyRef:
+                    name: accsv-config
+                    key: dbpath
+            #Redis
+            - name: Redis_Path
+              valueFrom:
+                configMapKeyRef:
+                    name: accsv-config
+                    key: redispath
+
+

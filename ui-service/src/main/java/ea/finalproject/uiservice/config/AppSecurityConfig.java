@@ -34,8 +34,12 @@ public class AppSecurityConfig extends WebSecurityConfigurerAdapter {
     @Override
     protected void configure(HttpSecurity http) throws Exception {
         http.csrf().disable()
+
                 .authorizeRequests().antMatchers("/login","/profile","/pay","/success",
                 "/payPal","/creditCard","/index","/signup", "/bankAccount").permitAll()
+
+                .authorizeRequests().antMatchers("/login","/","/index","/signup","/profile").permitAll()
+
                 .anyRequest().authenticated()
                 .and()
 //                .formLogin()

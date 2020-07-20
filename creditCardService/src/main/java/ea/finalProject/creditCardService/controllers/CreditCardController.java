@@ -1,0 +1,16 @@
+package ea.finalProject.creditCardService.controllers;
+
+
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.RestController;
+
+@RestController
+public class CreditCardController {
+
+
+    @GetMapping("creditcard")
+    public String payCredit(){
+
+        return "OK";
+    }
+}
